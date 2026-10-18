@@ -10,6 +10,7 @@ The current functionalities
     - Description: Allows creation, loading, & deleting of a set of 1-36 premade FAWE Brush/Tools to be loaded to a users inventory. Retaining the original item details, custom names etc... & the inventory slot it was in at the time of saving. It will only save items that it believes are brushes/tools and are actively saved in the Database as well.
       - Commands: /BrushMacro, /BM, /ToolMacro, /TM.
       - Sub Commands, Save, Load, Delete
+      - Note: MacroName has a Limitation of 48 characters.
       - Usage, "/{Command} [Sub Command] [MacroName]"
       - Permissions
         - Save - "topherstools.bt.macro.save"

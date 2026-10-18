@@ -1,5 +1,6 @@
 package khristopher.FAWE_BT_Utils.commands.brushToolCommands.returnAllBrushTools.commandHandler;
 
+import khristopher.FAWE_BT_Utils.cooldown.CoolDownManager;
 import khristopher.a.main.TophersTools;
 import khristopher.FAWE_BT_Utils.b.messages.FAWEBrushTool.PlayerMessages;
 import khristopher.FAWE_BT_Utils.b.utils.Utils;
@@ -24,7 +25,10 @@ public class returnAllBrushToolsCommand {
      */
     public returnAllBrushToolsCommand(){
         Utils.registerClassWithCommandManager(this);
+        this.coolDowns = new CoolDownManager(10000);
     }
+
+    private final CoolDownManager coolDowns;
 
     /**
      * Provides the requester all of their brush/tool bindings from the database.
@@ -39,9 +43,11 @@ public class returnAllBrushToolsCommand {
         if (sender.source() instanceof Player player) {
             UUID uuid = player.getUniqueId();
             Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
+                if (coolDowns.needsToWait(player)) return;
                 List<String> allMaterialsInFileForUUID = BrushToolManager.allUUIDsToListMaterialsBound.get(player.getUniqueId());
                 if (allMaterialsInFileForUUID == null || allMaterialsInFileForUUID.isEmpty()) {
                     player.sendMessage(PlayerMessages.BrushTools_Not_On_File.getMessage());
+                    return;
                 }
                 boolean didAnyLoadoutApply = false;
                 List<BrushToolLoadout> loadoutList = new ArrayList<>();
@@ -70,7 +76,7 @@ public class returnAllBrushToolsCommand {
                 boolean finalDidAnyLoadoutApply = didAnyLoadoutApply;
                 Bukkit.getScheduler().runTask(TophersTools.getInstance(), () -> {
                     Player playerMainThread = Bukkit.getPlayer(uuid);
-                    if (playerMainThread != null && playerMainThread.isOnline()) {
+                    if (playerMainThread != null && playerMainThread.isOnline() && finalDidAnyLoadoutApply) {
                         Utils.clearInventorySlotsFromTo(playerMainThread, 0, 35);
                         for (BrushToolLoadout loadoutInList : loadoutList) {
                             if (loadoutInList.hasCustomItem()){
@@ -90,6 +96,7 @@ public class returnAllBrushToolsCommand {
                         player.sendMessage(PlayerMessages.Warning_Unable_To_Apply_BrushTools_From_File.getMessage());
                     }
                 });
+                coolDowns.placeCooldown(player);
             });
 
         }

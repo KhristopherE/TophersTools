@@ -1,5 +1,6 @@
 package khristopher.FAWE_BT_Utils.listeners.fawetool;
 
+import khristopher.FAWE_BT_Utils.cooldown.CoolDownManager;
 import khristopher.a.main.TophersTools;
 import khristopher.FAWE_BT_Utils.functionalities.loadout.BrushToolManager;
 import khristopher.FAWE_BT_Utils.listeners.fawetool.arguments.brushToolBinding;
@@ -12,6 +13,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class BrushToolListener implements Listener {
 
@@ -67,6 +69,15 @@ public class BrushToolListener implements Listener {
     private void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         BrushToolManager.brushToolSQL.brushToolSQLRequests.updatePlayerName(player.getUniqueId(), player.getName());
+    }
+
+    /**
+     * This is called only when a player quits the server to remove them from the CoolDownManager.
+     * @param event The event being called.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    private void onPlayerJoin(PlayerQuitEvent event) {
+        CoolDownManager.removePlayerFromMaps(event.getPlayer().getUniqueId());
     }
 
 }

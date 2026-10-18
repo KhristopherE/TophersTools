@@ -4,6 +4,7 @@ import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.blocks.BaseItem;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import khristopher.FAWE_BT_Utils.cooldown.CoolDownManager;
 import khristopher.a.main.TophersTools;
 import khristopher.FAWE_BT_Utils.b.messages.FAWEBrushTool.PlayerMessages;
 import khristopher.FAWE_BT_Utils.b.utils.Utils;
@@ -27,7 +28,10 @@ public class clearAllBrushToolsCommand {
      */
     public clearAllBrushToolsCommand(){
         Utils.registerClassWithCommandManager(this);
+        this.coolDowns = new CoolDownManager(10000);
     }
+
+    private final CoolDownManager coolDowns;
 
     /**
      * Clears all the requesters brush/tool bindings from the SQL File, & unbinds all brushes/tools from FAWE.
@@ -42,6 +46,7 @@ public class clearAllBrushToolsCommand {
         if (sender.source() instanceof Player player) {
             UUID uuid = player.getUniqueId();
             Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
+                if (coolDowns.needsToWait(player)) return;
                 List<String> allMaterialsInFileForUUID = BrushToolManager.allUUIDsToListMaterialsBound.get(player.getUniqueId());
                 Bukkit.getScheduler().runTask(TophersTools.getInstance(), () -> {
                     Player playerMainThread = Bukkit.getPlayer(uuid);
@@ -63,6 +68,7 @@ public class clearAllBrushToolsCommand {
                     BrushToolManager.allUUIDsToListMaterialsBound.put(player.getUniqueId(), new ArrayList<>());
                     player.sendMessage(PlayerMessages.BrushTools_Cleared.getMessage());
                 });
+                coolDowns.placeCooldown(player);
             });
 
         }

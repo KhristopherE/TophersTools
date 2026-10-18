@@ -1,5 +1,6 @@
 package khristopher.FAWE_BT_Utils.commands.brushToolCommands.getBrushTool.commandHandler;
 
+import khristopher.FAWE_BT_Utils.cooldown.CoolDownManager;
 import khristopher.a.main.TophersTools;
 import khristopher.FAWE_BT_Utils.b.messages.FAWEBrushTool.PlayerMessages;
 import khristopher.FAWE_BT_Utils.b.utils.Utils;
@@ -27,7 +28,10 @@ public class getBrushToolCommand {
      */
     public getBrushToolCommand(){
         Utils.registerClassWithCommandManager(this);
+        this.coolDowns = new CoolDownManager(2000);
     }
+
+    private final CoolDownManager coolDowns;
 
     /**
      * No argument GetBrushTool command, provided the sender is a player, provides the
@@ -42,6 +46,7 @@ public class getBrushToolCommand {
     private void getBrushTool(Source sender) {
         if (sender.source() instanceof Player player) {
             Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
+                if (coolDowns.needsToWait(player)) return;
                 BrushToolLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
                 if (loadout != null && !loadout.isBrushToolLoadoutEmpty()) {
                     player.sendMessage(PlayerMessages.BrushTool_Info_Below_Self.getMessage());
@@ -49,6 +54,7 @@ public class getBrushToolCommand {
                 } else {
                     player.sendMessage(PlayerMessages.BrushTool_Not_Bound_Self.getMessage());
                 }
+                coolDowns.placeCooldown(player);
             });
         }
     }
@@ -68,6 +74,7 @@ public class getBrushToolCommand {
         if (sender.source() instanceof Player player) {
             Player onlinePlayer = Bukkit.getPlayer(requestedPlayer);
             Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
+                if (coolDowns.needsToWait(player)) return;
                 if (onlinePlayer == null) {
                     player.sendMessage(PlayerMessages.BrushTool_Info_Inquiry_Player_Offline_Requesting_Specify_Material.getMessage());
                 } else {
@@ -79,6 +86,7 @@ public class getBrushToolCommand {
                         player.sendMessage(PlayerMessages.BrushTool_Not_Bound_Specified_Player.getMessage(onlinePlayer.getName()));
                     }
                 }
+                coolDowns.placeCooldown(player);
             });
         }
     }
@@ -98,6 +106,7 @@ public class getBrushToolCommand {
     private void getBrushToolByPlayerByMaterial(Source sender, @Argument(value = "player", suggestions = "suggestedPlayers") String requestedPlayer, @Argument(value = "material", suggestions = "suggestedMaterials") String requestedMaterial) {
         if (sender.source() instanceof Player player) {
             Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
+                if (coolDowns.needsToWait(player)) return;
                 UUID requestedPlayerUUID = BrushToolManager.allPlayersInSQL.get(requestedPlayer);
                 BrushToolLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(requestedPlayerUUID, requestedMaterial.toUpperCase());
                 if (loadout != null && !loadout.isBrushToolLoadoutEmpty()) {
@@ -106,6 +115,7 @@ public class getBrushToolCommand {
                 } else {
                     player.sendMessage(PlayerMessages.BrushTool_Not_Bound_Specified_Player_Specified_Material.getMessage(requestedPlayer, requestedMaterial));
                 }
+                coolDowns.placeCooldown(player);
             });
         }
     }

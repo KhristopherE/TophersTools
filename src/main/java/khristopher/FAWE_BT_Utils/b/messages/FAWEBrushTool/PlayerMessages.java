@@ -41,6 +41,8 @@ public enum PlayerMessages {
             "&7Your prior &6brushes/tools &7have been &are-applied&7."),
     BrushTools_Cleared(
             "&7All of your &6brushes/tools &7have been &ccleared &7from the file, & &cunbound&7 in FAWE."),
+    BrushTool_Max_Length(
+            "&7The max length for a &6brush/tool &7macro &ename &7is &e48 characters&7."),
     BrushTool_Macro_Saved(
             "&7Your &6brush/tool &7macro has been &asaved &7as &b%macroName%&7."),
     BrushTool_Macro_Already_Exists_Requesting_Override(
@@ -57,6 +59,8 @@ public enum PlayerMessages {
             "&7Deletion of macro &b%macroName% &7has &cfailed&7. Please contact an admin."),
     BrushTool_Macro_Delete_Requesting_Confirmation(
             "&7Deletion request for macro &b%macroName% &7received. Add &econfirm &7to the end of your command, within &c15 seconds &7to finalize."),
+    BrushTool_Macro_Delete_Requesting_Initial_Request_Before_Confirmation(
+            "&7Deletion request for macro &b%macroName% &cnot &7received. Input &cwithout &econfirm &7first."),
     BrushTool_Macro_Delete_Confirmation_Window_Expired(
             "&7Deletion request &econfirmation &7for macro &b%macroName% &7has &cexpired&7. Please try again."),
     BrushTool_Macro_Help(

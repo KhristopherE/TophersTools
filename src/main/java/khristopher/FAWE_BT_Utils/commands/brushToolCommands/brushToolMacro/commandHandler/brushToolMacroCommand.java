@@ -1,5 +1,6 @@
 package khristopher.FAWE_BT_Utils.commands.brushToolCommands.brushToolMacro.commandHandler;
 
+import khristopher.FAWE_BT_Utils.cooldown.CoolDownManager;
 import khristopher.a.main.TophersTools;
 import khristopher.FAWE_BT_Utils.b.messages.FAWEBrushTool.PlayerMessages;
 import khristopher.FAWE_BT_Utils.b.utils.Utils;
@@ -25,7 +26,14 @@ public class brushToolMacroCommand {
      */
     public brushToolMacroCommand(){
         Utils.registerClassWithCommandManager(this);
+        this.coolDownsSaves = new CoolDownManager(10000);
+        this.coolDownsLoads = new CoolDownManager(10000);
+        this.coolDownsDeletes = new CoolDownManager(10000);
     }
+
+    private final CoolDownManager coolDownsSaves;
+    private final CoolDownManager coolDownsLoads;
+    private final CoolDownManager coolDownsDeletes;
 
     /**
      * Allows the player to save a current inventory from slots 0-35 with data from the current Brush/Tool Data base into a macro form.
@@ -41,7 +49,12 @@ public class brushToolMacroCommand {
     @Permission("topherstools.bt.macro.save")
     private void brushToolMacroSave(Source sender, @Argument(value = "macroname", suggestions = "suggestedMacros") String macroName, @Flag(value = "o") boolean override) {
         if (sender.source() instanceof Player player) {
+            if (coolDownsSaves.needsToWait(player)) return;
             String finalMacroName = sanitizeInput(macroName);
+            if (finalMacroName.length() > 48){
+                player.sendMessage(PlayerMessages.BrushTool_Max_Length.getMessage());
+                return;
+            }
             BrushToolLoadoutMacro brushToolLoadoutMacro = new BrushToolLoadoutMacro(finalMacroName);
             if (brushToolLoadoutMacro.alreadyExists() && !override){
                 player.sendMessage(PlayerMessages.BrushTool_Macro_Already_Exists_Requesting_Override.getMessageMacroName(finalMacroName));
@@ -50,6 +63,7 @@ public class brushToolMacroCommand {
             player.sendMessage(PlayerMessages.BrushTool_Macro_Saved.getMessageMacroName(finalMacroName));
             brushToolLoadoutMacro.saveToFile(player);
             BrushToolManager.addBrushToolLoadoutMacroToMem(finalMacroName);
+            coolDownsSaves.placeCooldown(player);
         }
     }
 
@@ -66,7 +80,12 @@ public class brushToolMacroCommand {
     @Permission("topherstools.bt.macro.load")
     private void brushToolMacroLoad(Source sender, @Argument(value = "macroname", suggestions = "suggestedMacros") String macroName) {
         if (sender.source() instanceof Player player) {
+            if (coolDownsLoads.needsToWait(player)) return;
             String finalMacroName = sanitizeInput(macroName);
+            if (finalMacroName.length() > 48){
+                player.sendMessage(PlayerMessages.BrushTool_Max_Length.getMessage());
+                return;
+            }
             Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
                 BrushToolLoadoutMacro brushToolLoadoutMacro = new BrushToolLoadoutMacro(finalMacroName);
                 if (!brushToolLoadoutMacro.alreadyExists()){
@@ -80,6 +99,7 @@ public class brushToolMacroCommand {
                 }
                 Bukkit.getScheduler().runTask(TophersTools.getInstance(), () -> brushToolLoadoutMacro.applyTo(player.getUniqueId()));
             });
+            coolDownsLoads.placeCooldown(player);
         }
     }
 
@@ -96,7 +116,12 @@ public class brushToolMacroCommand {
     @Permission("topherstools.bt.macro.delete")
     private void brushToolMacroDelete(Source sender, @Argument(value = "macroname", suggestions = "suggestedMacros") String macroName, @Argument(value = "confirm") String confirmation) {
         if (sender.source() instanceof Player player) {
+            if (coolDownsDeletes.needsToWait(player)) return;
             String finalMacroName = sanitizeInput(macroName);
+            if (finalMacroName.length() > 48){
+                player.sendMessage(PlayerMessages.BrushTool_Max_Length.getMessage());
+                return;
+            }
             Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
                 BrushToolLoadoutMacro brushToolLoadoutMacro = new BrushToolLoadoutMacro(finalMacroName);
                 if (!brushToolLoadoutMacro.alreadyExists()){
@@ -108,6 +133,7 @@ public class brushToolMacroCommand {
                                 if (brushToolLoadoutMacro.deleteBrushToolLoadoutMacro()){
                                     player.sendMessage(PlayerMessages.BrushTool_Macro_Deleted.getMessageMacroName(finalMacroName));
                                     BrushToolManager.removeBrushToolLoadoutMacroFromMem(finalMacroName);
+                                    pendingDeletions.remove(player.getUniqueId());
                                 } else {
                                     player.sendMessage(PlayerMessages.BrushTool_Macro_Deletion_Failed.getMessageMacroName(finalMacroName));
                                 }
@@ -115,8 +141,7 @@ public class brushToolMacroCommand {
                                 player.sendMessage(PlayerMessages.BrushTool_Macro_Delete_Confirmation_Window_Expired.getMessageMacroName(finalMacroName));
                             }
                         } else {
-                            player.sendMessage(PlayerMessages.BrushTool_Macro_Delete_Requesting_Confirmation.getMessageMacroName(finalMacroName));
-                            pendingDeletions.put(player.getUniqueId(), new PendingDeletion(finalMacroName));
+                            player.sendMessage(PlayerMessages.BrushTool_Macro_Delete_Requesting_Initial_Request_Before_Confirmation.getMessageMacroName(finalMacroName));
                         }
                     } else {
                         player.sendMessage(PlayerMessages.BrushTool_Macro_Delete_Requesting_Confirmation.getMessageMacroName(finalMacroName));
@@ -124,6 +149,7 @@ public class brushToolMacroCommand {
                     }
                 }
             });
+            coolDownsDeletes.placeCooldown(player);
         }
     }
 

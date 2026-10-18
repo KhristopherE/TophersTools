@@ -44,6 +44,7 @@ public class SQLManager {
             }
         }
         this.connectionURL = "jdbc:sqlite:" +  dbFile;
+        enableWAL();
     }
 
     public SQLManager(String host, int port, String databaseName, String username, String password, boolean useSSL) {
@@ -75,6 +76,14 @@ public class SQLManager {
             return java.sql.DriverManager.getConnection(connectionURL, username, password);
         } else {
             return java.sql.DriverManager.getConnection(connectionURL);
+        }
+    }
+
+    private void enableWAL(){
+        try (Statement statement = getConnection().createStatement()) {
+            statement.execute("PRAGMA journal_mode=WAL;");
+        } catch (SQLException e) {
+            TophersTools.getInstance().getSLF4JLogger().error("Failed to set Database Journal Mode to WAL", e);
         }
     }
 

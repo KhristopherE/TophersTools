@@ -1,10 +1,11 @@
 package khristopher.FAWE_BT_Utils.commands.brushToolCommands.shoutBrushTool.commandHandler;
 
-import khristopher.a.main.TophersTools;
 import khristopher.FAWE_BT_Utils.b.messages.FAWEBrushTool.PlayerMessages;
 import khristopher.FAWE_BT_Utils.b.utils.Utils;
+import khristopher.FAWE_BT_Utils.cooldown.CoolDownManager;
 import khristopher.FAWE_BT_Utils.functionalities.loadout.BrushToolLoadout;
 import khristopher.FAWE_BT_Utils.functionalities.loadout.BrushToolManager;
+import khristopher.a.main.TophersTools;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -22,7 +23,10 @@ public class shoutBrushToolCommand {
      */
     public shoutBrushToolCommand(){
         Utils.registerClassWithCommandManager(this);
+        this.coolDowns = new CoolDownManager(5000);
     }
+
+    private final CoolDownManager coolDowns;
 
     /**
      * Sends all online players a message containing the command issuing players currently held brush.
@@ -38,6 +42,7 @@ public class shoutBrushToolCommand {
     private void shoutBrushTool(Source sender) {
         if (sender.source() instanceof Player player) {
             Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
+                if (coolDowns.needsToWait(player)) return;
                 BrushToolLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
                 if (loadout != null && !loadout.isBrushToolLoadoutEmpty()) {
                     player.sendMessage(PlayerMessages.BrushTool_Info_Below_Self.getMessage());
@@ -54,6 +59,7 @@ public class shoutBrushToolCommand {
                 } else {
                     player.sendMessage(PlayerMessages.BrushTool_Not_Bound_Self.getMessage());
                 }
+                coolDowns.placeCooldown(player);
             });
         }
     }
