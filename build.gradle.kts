@@ -62,8 +62,12 @@ tasks {
         dependsOn(shadowJar)
     }
     named<ShadowJar>("shadowJar") {
+        from(project.rootDir) {
+            include("LICENSE*", "THIRD-PARTY-LICENSES*", "README*")
+        }
         archiveClassifier.set("")
         destinationDirectory.set(targetOutputDirectory)
+
         finalizedBy("ifAlternateLocationCopyToOutputJarFile")
     }
     register<Copy>("ifAlternateLocationCopyToOutputJarFile") {

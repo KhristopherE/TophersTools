@@ -45,3 +45,53 @@ The current functionalities
       - Commands: /ClearAllBrushes, /CAB, /ClearAllTools, /CAT. I much prefer CAT.
       - Usage, "/{Command}"
       - Permission, "topherstools.bt.clearall"
+
+## 📜 Credits & Third-Party Dependencies
+
+TophersTools relies on several amazing open-source projects. To comply with open-source licensing standards, dependencies are categorized by how they are integrated into the project below.
+
+### 📦 Shaded / Embedded Libraries
+The following libraries are bundled directly inside the `TophersTools` compiled binary (`.jar`):
+
+* **[Cloud Command Framework](https://github.com/Incendo/cloud-minecraft)** (`org.incendo:cloud-paper`, `org.incendo:cloud-annotations`)
+  * **License:** [MIT License](https://github.com/Incendo/cloud-minecraft/blob/master/LICENSE)
+  * **Copyright:** © Alexander Söderberg / Incendo Team
+  * Modern command framework and annotation parser used for command handling.
+
+* **[Google Gson](https://github.com/google/gson)** (`com.google.code.gson:gson`)
+  * **License:** [Apache License 2.0](https://github.com/google/gson/blob/main/LICENSE)
+  * **Copyright:** © Google LLC
+  * Java serialization/deserialization library used for JSON data handling.
+
+* **[Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)** (`org.apache.commons:commons-lang3`)
+  * **License:** [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+  * **Copyright:** © The Apache Software Foundation
+  * Core Java utility helper classes (included as a dependency constraint).
+
+---
+
+### 🌐 Provided / Compile-Only Dependencies
+The following dependencies are **not** bundled inside the plugin JAR. They are provided at runtime by the server software or prerequisite server plugins:
+
+* **[Paper API](https://papermc.io/)** (`io.papermc.paper:paper-api`)
+  * **License:** [GPLv3](https://github.com/PaperMC/Paper/blob/main/LICENSE.md) / [MIT](https://github.com/PaperMC/Paper/blob/main/LICENSE.md)
+  * High-performance Minecraft server software API.
+
+* **[FastAsyncWorldEdit (FAWE)](https://github.com/IntellectualSites/FastAsyncWorldEdit)** (`com.fastasyncworldedit:FastAsyncWorldEdit-Core`)
+  * **License:** [GPLv3](https://github.com/IntellectualSites/FastAsyncWorldEdit/blob/main/LICENSE.txt)
+  * Fast async building and manipulation framework.
+
+* **[WorldEdit](https://github.com/EngineHub/WorldEdit)** (`com.sk89q.worldedit:worldedit-bukkit`)
+  * **License:** [GPLv3](https://github.com/EngineHub/WorldEdit/blob/master/LICENSE.txt)
+  * In-game Minecraft map editor.
+
+* **[IntellectualSites BOM](https://github.com/IntellectualSites/bom)** (`com.intellectualsites.bom:bom-newest`)
+  * **License:** [MIT License](https://github.com/IntellectualSites/bom/blob/main/LICENSE)
+  * Bill of Materials for aligning IntellectualSites dependency versions during build time.
+
+---
+
+## 📄 License
+
+This project is licensed under the [GNU General Public License v3.0 (GPLv3)](LICENSE).  
+For third-party legal notices regarding embedded components, see [THIRD-PARTY-LICENSES.md](THIRD-PARTY-LICENSES.md)
