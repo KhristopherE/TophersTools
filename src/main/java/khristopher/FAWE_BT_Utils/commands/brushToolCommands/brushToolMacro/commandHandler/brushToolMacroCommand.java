@@ -134,6 +134,7 @@ public class brushToolMacroCommand {
                                     player.sendMessage(PlayerMessages.BrushTool_Macro_Deleted.getMessageMacroName(finalMacroName));
                                     BrushToolManager.removeBrushToolLoadoutMacroFromMem(finalMacroName);
                                     pendingDeletions.remove(player.getUniqueId());
+                                    coolDownsDeletes.placeCooldown(player);
                                 } else {
                                     player.sendMessage(PlayerMessages.BrushTool_Macro_Deletion_Failed.getMessageMacroName(finalMacroName));
                                 }
@@ -149,7 +150,6 @@ public class brushToolMacroCommand {
                     }
                 }
             });
-            coolDownsDeletes.placeCooldown(player);
         }
     }
 
