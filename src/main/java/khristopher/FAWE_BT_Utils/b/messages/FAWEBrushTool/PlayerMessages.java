@@ -145,7 +145,7 @@ public enum PlayerMessages {
      */
     public static Component getBuggedStateSecondaryBrushInvalidMessage(){
         return LegacyComponentSerializer.legacyAmpersand().deserialize(
-                "\n&8[&cWARNING&8] \\n&7Detected &cbugged brush/tool state&7. Use the link above to &areapply &7your brush.")
+                "\n&8[&cWARNING&8] \n&7Detected &cbugged brush/tool state&7. Use the link above to &areapply &7your brush.")
                 .append(LegacyComponentSerializer.legacyAmpersand().deserialize(
                 "&7[&eHover for details&7]")
                 .hoverEvent(HoverEvent.showText(LegacyComponentSerializer.legacyAmpersand().deserialize(
