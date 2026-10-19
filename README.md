@@ -1,5 +1,5 @@
 # TopherTools
-Credits
+Personal Credits
 - Created by KhristopherE.
 - Credit to TheWither_MAN for many ideas throughout and sparking the seed for this project & helping test the functionalities.
 - Credit to Hunterspal for being someone to talk to about this project & helping test the functionalities.
@@ -46,11 +46,11 @@ The current functionalities
       - Usage, "/{Command}"
       - Permission, "topherstools.bt.clearall"
 
-## 📜 Credits & Third-Party Dependencies
+## Credits & Third-Party Dependencies
 
 TophersTools relies on several amazing open-source projects. To comply with open-source licensing standards, dependencies are categorized by how they are integrated into the project below.
 
-### 📦 Shaded / Embedded Libraries
+### Shaded / Embedded Libraries
 The following libraries are bundled directly inside the `TophersTools` compiled binary (`.jar`):
 
 * **[Cloud Command Framework](https://github.com/Incendo/cloud-minecraft)** (`org.incendo:cloud-paper`, `org.incendo:cloud-annotations`)
@@ -70,7 +70,7 @@ The following libraries are bundled directly inside the `TophersTools` compiled 
 
 ---
 
-### 🌐 Provided / Compile-Only Dependencies
+### Provided / Compile-Only Dependencies
 The following dependencies are **not** bundled inside the plugin JAR. They are provided at runtime by the server software or prerequisite server plugins:
 
 * **[Paper API](https://papermc.io/)** (`io.papermc.paper:paper-api`)
@@ -91,7 +91,7 @@ The following dependencies are **not** bundled inside the plugin JAR. They are p
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the [GNU General Public License v3.0 (GPLv3)](LICENSE).  
 For third-party legal notices regarding embedded components, see [THIRD-PARTY-LICENSES.md](THIRD-PARTY-LICENSES.md)
