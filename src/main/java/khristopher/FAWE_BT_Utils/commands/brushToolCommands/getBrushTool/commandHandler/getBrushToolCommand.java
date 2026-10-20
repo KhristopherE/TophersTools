@@ -45,7 +45,7 @@ public class getBrushToolCommand {
     @Permission("topherstools.bt.get.self")
     private void getBrushTool(Source sender) {
         if (sender.source() instanceof Player player) {
-            Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
+            TophersTools.getInstance().runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
                 BrushToolLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
                 if (loadout != null && !loadout.isBrushToolLoadoutEmpty()) {
@@ -73,7 +73,7 @@ public class getBrushToolCommand {
     private void getBrushToolByPlayer(Source sender, @Argument(value = "player", suggestions = "suggestedPlayers") String requestedPlayer) {
         if (sender.source() instanceof Player player) {
             Player onlinePlayer = Bukkit.getPlayer(requestedPlayer);
-            Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
+            TophersTools.getInstance().runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
                 if (onlinePlayer == null) {
                     player.sendMessage(PlayerMessages.BrushTool_Info_Inquiry_Player_Offline_Requesting_Specify_Material.getMessage());
@@ -105,7 +105,7 @@ public class getBrushToolCommand {
     @Permission("topherstools.bt.get.specified.player.specified.material")
     private void getBrushToolByPlayerByMaterial(Source sender, @Argument(value = "player", suggestions = "suggestedPlayers") String requestedPlayer, @Argument(value = "material", suggestions = "suggestedMaterials") String requestedMaterial) {
         if (sender.source() instanceof Player player) {
-            Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
+            TophersTools.getInstance().runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
                 UUID requestedPlayerUUID = BrushToolManager.allPlayersInSQL.get(requestedPlayer);
                 BrushToolLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(requestedPlayerUUID, requestedMaterial.toUpperCase());

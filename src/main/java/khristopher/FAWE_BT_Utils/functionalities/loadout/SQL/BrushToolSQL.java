@@ -2,11 +2,10 @@ package khristopher.FAWE_BT_Utils.functionalities.loadout.SQL;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import khristopher.a.main.TophersTools;
-import khristopher.FAWE_BT_Utils.config.ConfigYML;
 import khristopher.FAWE_BT_Utils.c.sql.SQLManager;
+import khristopher.FAWE_BT_Utils.config.ConfigYML;
 import khristopher.FAWE_BT_Utils.functionalities.loadout.BrushToolLoadout;
-import org.bukkit.Bukkit;
+import khristopher.a.main.TophersTools;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
@@ -75,7 +74,7 @@ public class BrushToolSQL {
      * @param username New Username.
      */
     public void updateUsernameSQL(UUID uuid, String username) {
-        Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), ()-> {
+        TophersTools.getInstance().runSequentialAsync( () -> {
             String request = "INSERT OR REPLACE INTO Players (uuid, username) VALUES (?, ?);";
             try (Connection c = sqlManager.getConnection(); PreparedStatement sqlRequest = c.prepareStatement(request)) {
                 sqlRequest.setString(1, uuid.toString());
@@ -159,7 +158,7 @@ public class BrushToolSQL {
      * @param material Material Bound.
      */
     public void deleteBrushToolLoadoutSQL(UUID uuid, String material) {
-        Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), ()-> {
+        TophersTools.getInstance().runSequentialAsync( () -> {
             String request = "DELETE FROM BrushToolBindings WHERE uuid = ? AND material = ?;";
             try (Connection c = sqlManager.getConnection(); PreparedStatement sqlRequest = c.prepareStatement(request)) {
                 sqlRequest.setString(1, uuid.toString());
@@ -176,7 +175,7 @@ public class BrushToolSQL {
      * @param primaryCommand New Primary Command.
      */
     public void updatePrimaryCommandSQL(UUID uuid, ItemStack itemStack, String primaryCommand) {
-        Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), ()-> {
+        TophersTools.getInstance().runSequentialAsync( () -> {
             String request = """
             INSERT INTO BrushToolBindings (uuid, material, primaryCommand, itemStack)
             VALUES (?, ?, ?, ?)
@@ -200,7 +199,7 @@ public class BrushToolSQL {
      * @param secondaryCommand New Primary Command.
      */
     public void updateSecondaryCommandSQL(UUID uuid, ItemStack itemStack, String secondaryCommand) {
-        Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), ()-> {
+        TophersTools.getInstance().runSequentialAsync( () -> {
             String request = """
             INSERT INTO BrushToolBindings (uuid, material, secondaryCommand, itemStack)
             VALUES (?, ?, ?, ?)
@@ -224,7 +223,7 @@ public class BrushToolSQL {
      * @param modifierCommands New Primary Command.
      */
     public void updateModifierCommandsSQL(UUID uuid, String material, List<String> modifierCommands) {
-        Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), ()-> {
+        TophersTools.getInstance().runSequentialAsync( () -> {
             String request = """
             INSERT INTO BrushToolBindings (uuid, material, modifierCommands)
             VALUES (?, ?, ?)
@@ -251,7 +250,7 @@ public class BrushToolSQL {
      * @param material Material Bound.
      */
     public void removeSecondaryCommandSQL(UUID uuid, String material) {
-        Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), ()-> {
+        TophersTools.getInstance().runSequentialAsync( () -> {
             String request = "UPDATE BrushToolBindings SET secondaryCommand = NULL WHERE uuid = ? AND material = ?;";
             try (Connection c = sqlManager.getConnection(); PreparedStatement sqlRequest = c.prepareStatement(request)) {
                 sqlRequest.setString(1, uuid.toString());
@@ -267,7 +266,7 @@ public class BrushToolSQL {
      * @param material Material Bound.
      */
     public void removeModifierCommandsSQL(UUID uuid, String material) {
-        Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), ()-> {
+        TophersTools.getInstance().runSequentialAsync( () -> {
             String sql = "UPDATE BrushToolBindings SET modifierCommands = ? WHERE uuid = ? AND material = ?;";
             try (Connection conn = sqlManager.getConnection(); PreparedStatement sqlRequest = conn.prepareStatement(sql)) {
                 sqlRequest.setString(1, gson.toJson(Collections.emptyList()));

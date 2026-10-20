@@ -1,15 +1,17 @@
 package khristopher.FAWE_BT_Utils.commands.brushToolCommands.brushToolMacro.commandHandler;
 
-import khristopher.FAWE_BT_Utils.cooldown.CoolDownManager;
-import khristopher.a.main.TophersTools;
 import khristopher.FAWE_BT_Utils.b.messages.FAWEBrushTool.PlayerMessages;
 import khristopher.FAWE_BT_Utils.b.utils.Utils;
 import khristopher.FAWE_BT_Utils.commands.brushToolCommands.brushToolMacro.utils.DKInstantMacro.DKInstantMacro;
+import khristopher.FAWE_BT_Utils.cooldown.CoolDownManager;
 import khristopher.FAWE_BT_Utils.functionalities.loadout.BrushToolManager;
 import khristopher.FAWE_BT_Utils.functionalities.loadout.brushtoolmacro.BrushToolLoadoutMacro;
-import org.bukkit.Bukkit;
+import khristopher.a.main.TophersTools;
 import org.bukkit.entity.Player;
-import org.incendo.cloud.annotations.*;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Flag;
+import org.incendo.cloud.annotations.Permission;
 import org.incendo.cloud.annotations.suggestion.Suggestions;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.paper.util.sender.Source;
@@ -86,7 +88,7 @@ public class brushToolMacroCommand {
                 player.sendMessage(PlayerMessages.BrushTool_Max_Length.getMessage());
                 return;
             }
-            Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
+            TophersTools.getInstance().runSequentialAsync( () -> {
                 BrushToolLoadoutMacro brushToolLoadoutMacro = new BrushToolLoadoutMacro(finalMacroName);
                 if (!brushToolLoadoutMacro.alreadyExists()){
                     player.sendMessage(PlayerMessages.BrushTool_Macro_Not_Exist.getMessageMacroName(finalMacroName));
@@ -97,7 +99,7 @@ public class brushToolMacroCommand {
                     player.sendMessage(PlayerMessages.Warning_BrushTool_Macro_Is_Empty.getMessageMacroName(finalMacroName));
                     return;
                 }
-                Bukkit.getScheduler().runTask(TophersTools.getInstance(), () -> brushToolLoadoutMacro.applyTo(player.getUniqueId()));
+                TophersTools.getInstance().runOnPrimaryThread(( () -> brushToolLoadoutMacro.applyTo(player.getUniqueId())));
             });
             coolDownsLoads.placeCooldown(player);
         }
@@ -122,7 +124,7 @@ public class brushToolMacroCommand {
                 player.sendMessage(PlayerMessages.BrushTool_Max_Length.getMessage());
                 return;
             }
-            Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
+            TophersTools.getInstance().runSequentialAsync( () -> {
                 BrushToolLoadoutMacro brushToolLoadoutMacro = new BrushToolLoadoutMacro(finalMacroName);
                 if (!brushToolLoadoutMacro.alreadyExists()){
                     player.sendMessage(PlayerMessages.BrushTool_Macro_Not_Exist.getMessageMacroName(finalMacroName));

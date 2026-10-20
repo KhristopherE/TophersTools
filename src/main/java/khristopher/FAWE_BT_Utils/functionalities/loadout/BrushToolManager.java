@@ -1,8 +1,7 @@
 package khristopher.FAWE_BT_Utils.functionalities.loadout;
 
-import khristopher.a.main.TophersTools;
 import khristopher.FAWE_BT_Utils.functionalities.loadout.SQL.BrushToolSQL;
-import org.bukkit.Bukkit;
+import khristopher.a.main.TophersTools;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,17 +21,17 @@ public class BrushToolManager {
         //Instantiates the BrushToolSQL, and makes it public static accessible.
         brushToolSQL = new BrushToolSQL("FAWE-BrushTools/SQLData", "PlayerData");
         //Makes an Async Call to Initialize the SQL Table, and get All Players in The SQL.
-        Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
+        TophersTools.getInstance().runSequentialAsync( () -> {
             brushToolSQL.initializeTable();
             Map<UUID, List<String>> allUUIDsToListMaterialsBoundACM = brushToolSQL.getUUIDMaterialMapSQL();
             Map<String, UUID> allPlayersInSQLACM = brushToolSQL.getUsernameUUIDMapSQL();
             // Schedules it to run on the main thread to avoid concurrent modification.
             List<String> brushToolMacrosAvailableACM = collectAllBrushToolLoadoutMacros();
-            Bukkit.getScheduler().runTask(TophersTools.getInstance(), () -> {
+            TophersTools.getInstance().runOnPrimaryThread(( () -> {
                 allUUIDsToListMaterialsBound = allUUIDsToListMaterialsBoundACM;
                 allPlayersInSQL = allPlayersInSQLACM;
                 brushToolLoadoutMacrosAvailable = brushToolMacrosAvailableACM;
-            });
+            }));
         });
     }
 

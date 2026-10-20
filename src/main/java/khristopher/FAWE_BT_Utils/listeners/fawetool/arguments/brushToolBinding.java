@@ -7,12 +7,11 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.command.tool.Tool;
 import com.sk89q.worldedit.event.platform.CommandEvent;
 import com.sk89q.worldedit.world.item.ItemType;
-import khristopher.a.main.TophersTools;
 import khristopher.FAWE_BT_Utils.b.messages.FAWEBrushTool.PlayerMessages;
 import khristopher.FAWE_BT_Utils.functionalities.loadout.BrushToolLoadout;
 import khristopher.FAWE_BT_Utils.functionalities.loadout.BrushToolManager;
 import khristopher.FAWE_BT_Utils.listeners.fawetool.util.BrushToolCommandLogic;
-import org.bukkit.Bukkit;
+import khristopher.a.main.TophersTools;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -63,7 +62,7 @@ public class brushToolBinding {
          *  Although, before that we will provide the player with a clickable chat message to reapply all the prior brush commands.
          */
         if (hadPreviousTool && isSecondaryBinding && newToolStringReference.isEmpty()) {
-            Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
+            TophersTools.getInstance().runSequentialAsync( () -> {
                 BrushToolLoadout oldLoadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(player.getUniqueId(), minecraftItemInHand.getType().name());
                 if (oldLoadout != null && !oldLoadout.isBrushToolLoadoutEmpty()) {
                     player.sendMessage(oldLoadout.getLoadoutPromptMessage());

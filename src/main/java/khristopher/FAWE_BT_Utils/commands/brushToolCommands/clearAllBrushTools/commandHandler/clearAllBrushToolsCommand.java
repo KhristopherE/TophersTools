@@ -45,10 +45,10 @@ public class clearAllBrushToolsCommand {
     private void clearALlBrushTools(Source sender) {
         if (sender.source() instanceof Player player) {
             UUID uuid = player.getUniqueId();
-            Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
+            TophersTools.getInstance().runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
                 List<String> allMaterialsInFileForUUID = BrushToolManager.allUUIDsToListMaterialsBound.get(player.getUniqueId());
-                Bukkit.getScheduler().runTask(TophersTools.getInstance(), () -> {
+                TophersTools.getInstance().runOnPrimaryThread(( () -> {
                     Player playerMainThread = Bukkit.getPlayer(uuid);
                     if (playerMainThread == null || !playerMainThread.isOnline()) return;
                     if (allMaterialsInFileForUUID == null || allMaterialsInFileForUUID.isEmpty()) {
@@ -67,7 +67,7 @@ public class clearAllBrushToolsCommand {
                     }
                     BrushToolManager.allUUIDsToListMaterialsBound.put(player.getUniqueId(), new ArrayList<>());
                     player.sendMessage(PlayerMessages.BrushTools_Cleared.getMessage());
-                });
+                }));
                 coolDowns.placeCooldown(player);
             });
 

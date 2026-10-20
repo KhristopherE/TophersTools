@@ -41,7 +41,7 @@ public class shoutBrushToolCommand {
     @Permission({"topherstools.bt.shout", "topherstools.bt.share"})
     private void shoutBrushTool(Source sender) {
         if (sender.source() instanceof Player player) {
-            Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
+            TophersTools.getInstance().runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
                 BrushToolLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
                 if (loadout != null && !loadout.isBrushToolLoadoutEmpty()) {

@@ -8,12 +8,11 @@ import com.sk89q.worldedit.command.tool.Tool;
 import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.event.platform.CommandEvent;
 import com.sk89q.worldedit.world.item.ItemType;
-import khristopher.a.main.TophersTools;
 import khristopher.FAWE_BT_Utils.functionalities.loadout.BrushToolManager;
 import khristopher.FAWE_BT_Utils.listeners.fawetool.util.BrushToolCommandLogic;
 import khristopher.FAWE_BT_Utils.listeners.fawetool.util.BrushToolModifier;
 import khristopher.FAWE_BT_Utils.listeners.fawetool.util.BrushToolModifierChecker;
-import org.bukkit.Bukkit;
+import khristopher.a.main.TophersTools;
 import org.bukkit.inventory.ItemStack;
 
 public class brushToolModify {
@@ -57,7 +56,7 @@ public class brushToolModify {
         if (newTool == null) return;
 
         if (modifierChecker.checkIfModified(newTool))
-            Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
+            TophersTools.getInstance().runSequentialAsync( () -> {
                 BrushToolManager.brushToolSQL.brushToolSQLRequests.saveBrushToolModifier(player.getUniqueId(), itemInHand.getType().name(), brushToolModifier, command);
             });
     }

@@ -42,7 +42,7 @@ public class BrushToolLoadoutMacro {
      * @param onlinePlayer The player we're copying BrushToolLoadouts from.
      */
     public void saveToFile(Player onlinePlayer){
-        Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
+        TophersTools.getInstance().runSequentialAsync( () -> {
             macroYML.setup();
             for (String key : macroYML.getConfig().getKeys(false)) macroYML.getConfig().set(key, null);
             for (int i = 0; i <= 35; i++){

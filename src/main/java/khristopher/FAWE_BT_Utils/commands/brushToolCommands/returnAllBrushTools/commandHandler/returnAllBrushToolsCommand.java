@@ -42,7 +42,7 @@ public class returnAllBrushToolsCommand {
     private void returnAllBrushesTools(Source sender) {
         if (sender.source() instanceof Player player) {
             UUID uuid = player.getUniqueId();
-            Bukkit.getScheduler().runTaskAsynchronously(TophersTools.getInstance(), () -> {
+            TophersTools.getInstance().runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
                 List<String> allMaterialsInFileForUUID = BrushToolManager.allUUIDsToListMaterialsBound.get(player.getUniqueId());
                 if (allMaterialsInFileForUUID == null || allMaterialsInFileForUUID.isEmpty()) {
@@ -54,7 +54,7 @@ public class returnAllBrushToolsCommand {
                 for (String materialInFile : allMaterialsInFileForUUID){
                     BrushToolLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(uuid, materialInFile);
                     if (loadout != null && !loadout.isBrushToolLoadoutEmpty()){
-                        Bukkit.getScheduler().runTask(TophersTools.getInstance(), () -> {
+                        TophersTools.getInstance().runOnPrimaryThread(( () -> {
                             loadoutList.add(loadout);
                             Player playerMainThread = Bukkit.getPlayer(uuid);
                             if (playerMainThread != null && playerMainThread.isOnline()){
@@ -69,12 +69,12 @@ public class returnAllBrushToolsCommand {
                                     }
                                 }
                             }
-                        });
+                        }));
                         didAnyLoadoutApply = true;
                     }
                 }
                 boolean finalDidAnyLoadoutApply = didAnyLoadoutApply;
-                Bukkit.getScheduler().runTask(TophersTools.getInstance(), () -> {
+                TophersTools.getInstance().runOnPrimaryThread(( () -> {
                     Player playerMainThread = Bukkit.getPlayer(uuid);
                     if (playerMainThread != null && playerMainThread.isOnline() && finalDidAnyLoadoutApply) {
                         Utils.clearInventorySlotsFromTo(playerMainThread, 0, 35);
@@ -95,7 +95,7 @@ public class returnAllBrushToolsCommand {
                     } else {
                         player.sendMessage(PlayerMessages.Warning_Unable_To_Apply_BrushTools_From_File.getMessage());
                     }
-                });
+                }));
                 coolDowns.placeCooldown(player);
             });
 
