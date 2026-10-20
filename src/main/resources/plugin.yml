@@ -1,6 +1,6 @@
 name: TophersTools
 version: '${version}'
-main: khristopher.a.main.TophersTools
+main: io.github.khristophere.topherstools.TophersTools
 api-version: '26.3'
 description: '${description}'
 author: KhristopherE
