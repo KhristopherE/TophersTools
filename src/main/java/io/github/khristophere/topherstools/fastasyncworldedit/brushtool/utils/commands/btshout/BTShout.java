@@ -1,11 +1,11 @@
-package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.shoutBrushTool.commandHandler;
+package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btshout;
 
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.utilities.Utils;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolLoadout;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolManager;
-import io.github.khristophere.topherstools.TophersTools;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.utilities.Utils;
+import io.github.khristophere.topherstools.scheduler.Scheduler;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,16 +16,12 @@ import org.incendo.cloud.paper.util.sender.Source;
 import java.util.ArrayList;
 import java.util.List;
 
-public class shoutBrushToolCommand {
+public class BTShout {
 
-    /**
-     * Instantiates the ShoutBrushTool Command.
-     */
-    public shoutBrushToolCommand(){
+    public BTShout(){
         Utils.registerClassWithCommandManager(this);
         this.coolDowns = new Cooldown(5000);
     }
-
     private final Cooldown coolDowns;
 
     /**
@@ -41,7 +37,7 @@ public class shoutBrushToolCommand {
     @Permission({"topherstools.bt.shout", "topherstools.bt.share"})
     private void shoutBrushTool(Source sender) {
         if (sender.source() instanceof Player player) {
-            TophersTools.getInstance().runSequentialAsync( () -> {
+            Scheduler.runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
                 BrushToolLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
                 if (loadout != null && !loadout.isBrushToolLoadoutEmpty()) {

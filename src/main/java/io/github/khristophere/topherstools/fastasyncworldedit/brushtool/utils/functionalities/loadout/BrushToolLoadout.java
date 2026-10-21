@@ -1,8 +1,9 @@
 package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout;
 
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.arguments.brushToolBinding;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.arguments.brushToolModify;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.arguments.brushToolUnbind;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -76,9 +77,7 @@ public class BrushToolLoadout {
     public void applyTo(UUID uuid){
         Player player = Bukkit.getPlayer(uuid);
         if (player != null && player.isOnline()){
-            if (!primaryCommand.equals("N/A")) brushToolBinding.processCommand(player, primaryCommand);
-            if (!secondaryCommand.equals("N/A")) brushToolBinding.processCommand(player, secondaryCommand);
-            if (!modifiers.isEmpty()) modifiers.forEach(modifier -> brushToolModify.processCommand(player, modifier));
+            bindingCommands(player);
         }
     }
 
@@ -96,9 +95,7 @@ public class BrushToolLoadout {
         if (player != null && player.isOnline()){
             ItemStack existingHeldItem = player.getInventory().getItemInMainHand();
             player.getInventory().setItemInMainHand(itemStack);
-            if (!primaryCommand.equals("N/A")) brushToolBinding.processCommand(player, primaryCommand);
-            if (!secondaryCommand.equals("N/A")) brushToolBinding.processCommand(player, secondaryCommand);
-            if (!modifiers.isEmpty()) modifiers.forEach(modifier -> brushToolModify.processCommand(player, modifier));
+            bindingCommands(player);
             if (addBackCurrentlyHeldItem) player.getInventory().addItem(existingHeldItem);
         }
     }
@@ -111,14 +108,19 @@ public class BrushToolLoadout {
         if (localStack == null) localStack = new ItemStack(localMaterial);
         player.getInventory().setHeldItemSlot(0);
         player.getInventory().setItem(0, localStack);
-        if (!primaryCommand.equals("N/A")) brushToolBinding.processCommand(player, primaryCommand);
-        if (!secondaryCommand.equals("N/A")) brushToolBinding.processCommand(player, secondaryCommand);
-        if (!modifiers.isEmpty()) modifiers.forEach(modifier -> brushToolModify.processCommand(player, modifier));
+        bindingCommands(player);
         if (slot != 0){
             ItemStack movedItem = player.getInventory().getItem(0);
             player.getInventory().setItem(slot, movedItem);
             player.getInventory().setItem(0, null);
         }
+    }
+
+    private void bindingCommands(Player player) {
+        if (!primaryCommand.equals("N/A")) brushToolUnbind.processCommand(player, "none");
+        if (!primaryCommand.equals("N/A")) brushToolBinding.processCommand(player, primaryCommand);
+        if (!secondaryCommand.equals("N/A")) brushToolBinding.processCommand(player, secondaryCommand);
+        if (!modifiers.isEmpty()) modifiers.forEach(modifier -> brushToolModify.processCommand(player, modifier));
     }
 
     /**

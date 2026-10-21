@@ -1,11 +1,11 @@
-package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.getBrushTool.commandHandler;
+package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btget;
 
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
-import io.github.khristophere.topherstools.TophersTools;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.utilities.Utils;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolLoadout;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolManager;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.utilities.Utils;
+import io.github.khristophere.topherstools.scheduler.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -21,16 +21,12 @@ import java.util.List;
 import java.util.UUID;
 
 
-public class getBrushToolCommand {
+public class BTGet {
 
-    /**
-     * Instantiates the GetBrushTool Command.
-     */
-    public getBrushToolCommand(){
+    public BTGet(){
         Utils.registerClassWithCommandManager(this);
         this.coolDowns = new Cooldown(2000);
     }
-
     private final Cooldown coolDowns;
 
     /**
@@ -45,7 +41,7 @@ public class getBrushToolCommand {
     @Permission("topherstools.bt.get.self")
     private void getBrushTool(Source sender) {
         if (sender.source() instanceof Player player) {
-            TophersTools.getInstance().runSequentialAsync( () -> {
+            Scheduler.runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
                 BrushToolLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
                 if (loadout != null && !loadout.isBrushToolLoadoutEmpty()) {
@@ -73,7 +69,7 @@ public class getBrushToolCommand {
     private void getBrushToolByPlayer(Source sender, @Argument(value = "player", suggestions = "suggestedPlayers") String requestedPlayer) {
         if (sender.source() instanceof Player player) {
             Player onlinePlayer = Bukkit.getPlayer(requestedPlayer);
-            TophersTools.getInstance().runSequentialAsync( () -> {
+            Scheduler.runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
                 if (onlinePlayer == null) {
                     player.sendMessage(PlayerMessages.BrushTool_Info_Inquiry_Player_Offline_Requesting_Specify_Material.getMessage());
@@ -105,7 +101,7 @@ public class getBrushToolCommand {
     @Permission("topherstools.bt.get.specified.player.specified.material")
     private void getBrushToolByPlayerByMaterial(Source sender, @Argument(value = "player", suggestions = "suggestedPlayers") String requestedPlayer, @Argument(value = "material", suggestions = "suggestedMaterials") String requestedMaterial) {
         if (sender.source() instanceof Player player) {
-            TophersTools.getInstance().runSequentialAsync( () -> {
+            Scheduler.runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
                 UUID requestedPlayerUUID = BrushToolManager.allPlayersInSQL.get(requestedPlayer);
                 BrushToolLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(requestedPlayerUUID, requestedMaterial.toUpperCase());

@@ -1,4 +1,4 @@
-package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.brushToolMacro.utils.DKInstantMacro;
+package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btmacro.dkmacros;
 
 import com.fastasyncworldedit.core.command.tool.brush.BrushSettings;
 import com.fastasyncworldedit.core.command.tool.brush.CommandBrush;
@@ -33,7 +33,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class DKInstantMacro {
+public class DKFirstMacro {
 
     /**
      * Creates a Command Brush/Tool for the given player to be placed in a specific slot.
@@ -248,158 +248,158 @@ public class DKInstantMacro {
      */
     public static void DKInstantMacro(Player player){
         Utils.clearInventorySlotsFromTo(player, 0, 35);
-        DKInstantMacro.giveStandardWand(player, "&dWand", 0);
+        DKFirstMacro.giveStandardWand(player, "&dWand", 0);
 
-        DKInstantMacro.createScatterSchematicBrush(player,
+        DKFirstMacro.createScatterSchematicBrush(player,
                 Utils.createNamedItem(Material.STONE_AXE, "&3Outer | Small Tree"),
                 9,
                 "Trees/Outer/Small",
                 true,
                 "//br scatter #fullcopy[Trees/Outer/Small][true] 1 1 1 -o"
         );
-        DKInstantMacro.createScatterSchematicBrush(player,
+        DKFirstMacro.createScatterSchematicBrush(player,
                 Utils.createNamedItem(Material.COPPER_AXE, "&3Outer | Medium Tree"),
                 10,
                 "Trees/Outer/Medium",
                 true,
                 "//br scatter #fullcopy[Trees/Outer/Medium][true] 1 1 1 -o"
         );
-        DKInstantMacro.createScatterSchematicBrush(player,
+        DKFirstMacro.createScatterSchematicBrush(player,
                 Utils.createNamedItem(Material.IRON_AXE, "&3Outer | Large Tree"),
                 11,
                 "Trees/Outer/Large",
                 true,
                 "//br scatter #fullcopy[Trees/Outer/Large][true] 1 1 1 -o"
         );
-        DKInstantMacro.createScatterSchematicBrush(player,
+        DKFirstMacro.createScatterSchematicBrush(player,
                 Utils.createNamedItem(Material.GOLDEN_AXE, "&6Inner | Small Tree"),
                 18,
                 "Trees/Inner/Small",
                 true,
                 "//br scatter #fullcopy[Trees/Inner/Small][true] 1 1 1 -o"
         );
-        DKInstantMacro.createScatterSchematicBrush(player,
+        DKFirstMacro.createScatterSchematicBrush(player,
                 Utils.createNamedItem(Material.DIAMOND_AXE, "&6Inner | Medium Tree"),
                 19,
                 "Trees/Inner/Medium",
                 true,
                 "//br scatter #fullcopy[Trees/Inner/Medium][true] 1 1 1 -o"
         );
-        DKInstantMacro.createScatterSchematicBrush(player,
+        DKFirstMacro.createScatterSchematicBrush(player,
                 Utils.createNamedItem(Material.NETHERITE_AXE, "&6Inner | Large Tree"),
                 20,
                 "Trees/Inner/Large",
                 true,
                 "//br scatter #fullcopy[Trees/Inner/Large][true] 1 1 1 -o"
         );
-        DKInstantMacro.createScatterSchematicBrush(player,
+        DKFirstMacro.createScatterSchematicBrush(player,
                 Utils.createNamedItem(Material.GOLDEN_HOE, "&5Small Bush"),
                 27,
                 "Bush/Small",
                 true,
                 "//br scatter #fullcopy[Bush/Small][true] 1 1 1 -o"
         );
-        DKInstantMacro.createScatterSchematicBrush(player,
+        DKFirstMacro.createScatterSchematicBrush(player,
                 Utils.createNamedItem(Material.DIAMOND_HOE, "&5Medium Bush"),
                 28,
                 "Bush/Medium",
                 true,
                 "//br scatter #fullcopy[Bush/Medium][true] 1 1 1 -o"
         );
-        DKInstantMacro.createScatterSchematicBrush(player,
+        DKFirstMacro.createScatterSchematicBrush(player,
                 Utils.createNamedItem(Material.NETHERITE_HOE, "&5Large Bush"),
                 29,
                 "Bush/Large",
                 true,
                 "//br scatter #fullcopy[Bush/Large][true] 1 1 1 -o"
         );
-        DKInstantMacro.createScatterSchematicBrush(player,
+        DKFirstMacro.createScatterSchematicBrush(player,
                 Utils.createNamedItem(Material.STONE_PICKAXE, "&9Dry | &3Small Rock"),
                 15,
                 "Rocks/Dry/Small",
                 true,
                 "//br scatter #fullcopy[Rocks/Dry/Small][true] 1 1 1 -o"
         );
-        DKInstantMacro.createScatterSchematicBrush(player,
+        DKFirstMacro.createScatterSchematicBrush(player,
                 Utils.createNamedItem(Material.COPPER_PICKAXE, "&9Dry | &3Medium Rock"),
                 16,
                 "Rocks/Dry/Medium",
                 true,
                 "//br scatter #fullcopy[Rocks/Dry/Medium][true] 1 1 1 -o"
         );
-        DKInstantMacro.createScatterSchematicBrush(player,
+        DKFirstMacro.createScatterSchematicBrush(player,
                 Utils.createNamedItem(Material.IRON_PICKAXE, "&9Dry | &3Large Rock"),
                 17,
                 "Rocks/Dry/Large",
                 true,
                 "//br scatter #fullcopy[Rocks/Dry/Large][true] 1 1 1 -o"
         );
-        DKInstantMacro.createScatterSchematicBrush(player,
+        DKFirstMacro.createScatterSchematicBrush(player,
                 Utils.createNamedItem(Material.GOLDEN_PICKAXE, "&3Wet | &3Small Rock"),
                 24,
                 "Rocks/Wet/Small",
                 true,
                 "//br scatter #fullcopy[Rocks/Wet/Small][true] 1 1 1 -o"
         );
-        DKInstantMacro.createScatterSchematicBrush(player,
+        DKFirstMacro.createScatterSchematicBrush(player,
                 Utils.createNamedItem(Material.DIAMOND_PICKAXE, "&3Wet | &3Medium Rock"),
                 25,
                 "Rocks/Wet/Medium",
                 true,
                 "//br scatter #fullcopy[Rocks/Wet/Medium][true] 1 1 1 -o"
         );
-        DKInstantMacro.createScatterSchematicBrush(player,
+        DKFirstMacro.createScatterSchematicBrush(player,
                 Utils.createNamedItem(Material.NETHERITE_PICKAXE, "&3Wet | &3Large Rock"),
                 26,
                 "Rocks/Wet/Large",
                 true,
                 "//br scatter #fullcopy[Rocks/Wet/Large][true] 1 1 1 -o"
         );
-        DKInstantMacro.createScatterSchematicBrush(player,
+        DKFirstMacro.createScatterSchematicBrush(player,
                 Utils.createNamedItem(Material.IRON_SWORD, "&2Birch Tree"),
                 31,
                 "Trees/Birch",
                 true,
                 "//br scatter #fullcopy[Trees/Birch][true] 1 1 1 -o"
         );
-        DKInstantMacro.createSphereBrush(
+        DKFirstMacro.createSphereBrush(
                 player,
                 Utils.createNamedItem(Material.WOODEN_SHOVEL, "&3Wet &6Dirt"),
                 33,
                 3,
-                DKInstantMacro.mapMaterialToPercentage(
+                DKFirstMacro.mapMaterialToPercentage(
                         List.of(Material.PODZOL, Material.BROWN_CONCRETE_POWDER),
                         List.of(50.0, 50.0)),
                 true,
                 List.of(Material.GRASS_BLOCK, Material.GREEN_CONCRETE_POWDER),
                 "//brush sphere podzol,brown_concrete_powder 3");
-        DKInstantMacro.createSphereBrush(player,
+        DKFirstMacro.createSphereBrush(player,
                 Utils.createNamedItem(Material.COPPER_SHOVEL, "&6Dry &6Dirt"),
                 34,
                 3,
-                DKInstantMacro.mapMaterialToPercentage(
+                DKFirstMacro.mapMaterialToPercentage(
                         List.of(Material.COARSE_DIRT, Material.ROOTED_DIRT),
                         List.of(50.0, 50.0)),
                 true,
                 List.of(Material.GRASS_BLOCK, Material.GREEN_CONCRETE_POWDER),
                 "//brush sphere coarse_dirt,rooted_dirt 3");
-        DKInstantMacro.createSphereBrush(player,
+        DKFirstMacro.createSphereBrush(player,
                 Utils.createNamedItem(Material.DIAMOND_SHOVEL, "&2Grass"),
                 35,
                 3,
-                DKInstantMacro.mapMaterialToPercentage(
+                DKFirstMacro.mapMaterialToPercentage(
                         List.of(Material.GREEN_CONCRETE_POWDER, Material.GRASS_BLOCK),
                         List.of(50.0, 50.0)),
                 true,
                 List.of(Material.GRASS_BLOCK, Material.GREEN_CONCRETE_POWDER),
                 "//brush sphere green_concrete_powder,grass_block 3");
-        DKInstantMacro.createCommandBrush(player,
+        DKFirstMacro.createCommandBrush(player,
                 Utils.createNamedItem(Material.MACE, "&9Undo Brush"),
                 22,
                 "/undo",
                 "//br command 1 undo"
         );
-        DKInstantMacro.createCommandBrush(player,
+        DKFirstMacro.createCommandBrush(player,
                 Utils.createNamedItem(Material.TRIDENT, "&9Undo Brush"),
                 13,
                 "/undo",
@@ -408,7 +408,7 @@ public class DKInstantMacro {
 
         player.sendMessage(PlayerMessages.BrushTool_Macro_Issued_DKInstant.getMessage());
         player.sendMessage(PlayerMessages.recommendedBrushToolMacroGMaskMessage());
-        if (DKInstantMacro.hasGlobalMask(player)) player.sendMessage(PlayerMessages.Warning_GMask_Is_Enabled.getMessage());
+        if (DKFirstMacro.hasGlobalMask(player)) player.sendMessage(PlayerMessages.Warning_GMask_Is_Enabled.getMessage());
     }
 
 }

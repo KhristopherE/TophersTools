@@ -12,7 +12,7 @@ import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.fu
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolCommandLogic;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolModifier;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolModifierChecker;
-import io.github.khristophere.topherstools.TophersTools;
+import io.github.khristophere.topherstools.scheduler.Scheduler;
 import org.bukkit.inventory.ItemStack;
 
 public class brushToolModify {
@@ -56,7 +56,7 @@ public class brushToolModify {
         if (newTool == null) return;
 
         if (modifierChecker.checkIfModified(newTool))
-            TophersTools.getInstance().runSequentialAsync( () -> {
+            Scheduler.runSequentialAsync( () -> {
                 BrushToolManager.brushToolSQL.brushToolSQLRequests.saveBrushToolModifier(player.getUniqueId(), itemInHand.getType().name(), brushToolModifier, command);
             });
     }

@@ -1,11 +1,11 @@
-package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.returnAllBrushTools.commandHandler;
+package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btreturnall;
 
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
-import io.github.khristophere.topherstools.TophersTools;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.utilities.Utils;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolLoadout;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolManager;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.utilities.Utils;
+import io.github.khristophere.topherstools.scheduler.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -18,16 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class returnAllBrushToolsCommand {
+public class BTReturnAll {
 
-    /**
-     * Instantiates the ReturnAllBrushes / RAT Command.
-     */
-    public returnAllBrushToolsCommand(){
+    public BTReturnAll(){
         Utils.registerClassWithCommandManager(this);
         this.coolDowns = new Cooldown(10000);
     }
-
     private final Cooldown coolDowns;
 
     /**
@@ -42,7 +38,7 @@ public class returnAllBrushToolsCommand {
     private void returnAllBrushesTools(Source sender) {
         if (sender.source() instanceof Player player) {
             UUID uuid = player.getUniqueId();
-            TophersTools.getInstance().runSequentialAsync( () -> {
+            Scheduler.runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
                 List<String> allMaterialsInFileForUUID = BrushToolManager.allUUIDsToListMaterialsBound.get(player.getUniqueId());
                 if (allMaterialsInFileForUUID == null || allMaterialsInFileForUUID.isEmpty()) {
@@ -54,7 +50,7 @@ public class returnAllBrushToolsCommand {
                 for (String materialInFile : allMaterialsInFileForUUID){
                     BrushToolLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(uuid, materialInFile);
                     if (loadout != null && !loadout.isBrushToolLoadoutEmpty()){
-                        TophersTools.getInstance().runOnPrimaryThread(( () -> {
+                        Scheduler.runOnPrimaryThread(( () -> {
                             loadoutList.add(loadout);
                             Player playerMainThread = Bukkit.getPlayer(uuid);
                             if (playerMainThread != null && playerMainThread.isOnline()){
@@ -74,7 +70,7 @@ public class returnAllBrushToolsCommand {
                     }
                 }
                 boolean finalDidAnyLoadoutApply = didAnyLoadoutApply;
-                TophersTools.getInstance().runOnPrimaryThread(( () -> {
+                Scheduler.runOnPrimaryThread(( () -> {
                     Player playerMainThread = Bukkit.getPlayer(uuid);
                     if (playerMainThread != null && playerMainThread.isOnline() && finalDidAnyLoadoutApply) {
                         Utils.clearInventorySlotsFromTo(playerMainThread, 0, 35);

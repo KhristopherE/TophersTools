@@ -1,14 +1,14 @@
 package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.brushtoolmacro;
 
-import io.github.khristophere.topherstools.TophersTools;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.utilities.Utils;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.filemanagement.yml.YMLHandler;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.brushToolMacro.utils.DKInstantMacro.DKInstantMacro;
+import io.github.khristophere.topherstools.data.management.yml.YMLHandler;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btmacro.dkmacros.DKFirstMacro;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolLoadout;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolCommandLogic;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolModifier;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.utilities.Utils;
+import io.github.khristophere.topherstools.scheduler.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -42,7 +42,7 @@ public class BrushToolLoadoutMacro {
      * @param onlinePlayer The player we're copying BrushToolLoadouts from.
      */
     public void saveToFile(Player onlinePlayer){
-        TophersTools.getInstance().runSequentialAsync( () -> {
+        Scheduler.runSequentialAsync( () -> {
             macroYML.setup();
             for (String key : macroYML.getConfig().getKeys(false)) macroYML.getConfig().set(key, null);
             for (int i = 0; i <= 35; i++){
@@ -102,7 +102,7 @@ public class BrushToolLoadoutMacro {
                 }
             }
             player.sendMessage(PlayerMessages.BrushTool_Macro_Applied.getMessageMacroName(macroName));
-            if (DKInstantMacro.hasGlobalMask(player)) player.sendMessage(PlayerMessages.Warning_GMask_Is_Enabled.getMessage());
+            if (DKFirstMacro.hasGlobalMask(player)) player.sendMessage(PlayerMessages.Warning_GMask_Is_Enabled.getMessage());
         }
     }
 

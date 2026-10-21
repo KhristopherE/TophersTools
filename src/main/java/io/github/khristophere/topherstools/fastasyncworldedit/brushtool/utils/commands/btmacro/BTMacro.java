@@ -1,12 +1,12 @@
-package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.brushToolMacro.commandHandler;
+package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btmacro;
 
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.utilities.Utils;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.brushToolMacro.utils.DKInstantMacro.DKInstantMacro;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btmacro.dkmacros.DKFirstMacro;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.brushtoolmacro.BrushToolLoadoutMacro;
-import io.github.khristophere.topherstools.TophersTools;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.utilities.Utils;
+import io.github.khristophere.topherstools.scheduler.Scheduler;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
@@ -21,12 +21,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class brushToolMacroCommand {
+public class BTMacro {
 
-    /**
-     * Instantiates the BrushToolMacro Command.
-     */
-    public brushToolMacroCommand(){
+    public BTMacro(){
         Utils.registerClassWithCommandManager(this);
         this.coolDownsSaves = new Cooldown(10000);
         this.coolDownsLoads = new Cooldown(10000);
@@ -88,7 +85,7 @@ public class brushToolMacroCommand {
                 player.sendMessage(PlayerMessages.BrushTool_Max_Length.getMessage());
                 return;
             }
-            TophersTools.getInstance().runSequentialAsync( () -> {
+            Scheduler.runSequentialAsync( () -> {
                 BrushToolLoadoutMacro brushToolLoadoutMacro = new BrushToolLoadoutMacro(finalMacroName);
                 if (!brushToolLoadoutMacro.alreadyExists()){
                     player.sendMessage(PlayerMessages.BrushTool_Macro_Not_Exist.getMessageMacroName(finalMacroName));
@@ -99,7 +96,7 @@ public class brushToolMacroCommand {
                     player.sendMessage(PlayerMessages.Warning_BrushTool_Macro_Is_Empty.getMessageMacroName(finalMacroName));
                     return;
                 }
-                TophersTools.getInstance().runOnPrimaryThread(( () -> brushToolLoadoutMacro.applyTo(player.getUniqueId())));
+                Scheduler.runOnPrimaryThread(( () -> brushToolLoadoutMacro.applyTo(player.getUniqueId())));
             });
             coolDownsLoads.placeCooldown(player);
         }
@@ -124,7 +121,7 @@ public class brushToolMacroCommand {
                 player.sendMessage(PlayerMessages.BrushTool_Max_Length.getMessage());
                 return;
             }
-            TophersTools.getInstance().runSequentialAsync( () -> {
+            Scheduler.runSequentialAsync( () -> {
                 BrushToolLoadoutMacro brushToolLoadoutMacro = new BrushToolLoadoutMacro(finalMacroName);
                 if (!brushToolLoadoutMacro.alreadyExists()){
                     player.sendMessage(PlayerMessages.BrushTool_Macro_Not_Exist.getMessageMacroName(finalMacroName));
@@ -181,7 +178,7 @@ public class brushToolMacroCommand {
     private void brushToolMacro(Source sender) {
         if (sender.source() instanceof Player player) {
             if (player.getUniqueId().equals(UUID.fromString("9e278e4b-5296-4313-8e05-feedaeaaa050")) || player.getUniqueId().equals(UUID.fromString("fbbfa97b-d2e2-47e1-8987-15e83d8e005c"))){
-                DKInstantMacro.DKInstantMacro(player);
+                DKFirstMacro.DKInstantMacro(player);
             } else {
                 player.sendMessage(PlayerMessages.BrushTool_Macro_Help.getMessage());
             }

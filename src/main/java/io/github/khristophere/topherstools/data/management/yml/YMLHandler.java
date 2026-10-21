@@ -1,4 +1,4 @@
-package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.filemanagement.yml;
+package io.github.khristophere.topherstools.data.management.yml;
 
 import io.github.khristophere.topherstools.TophersTools;
 import org.bukkit.configuration.file.FileConfiguration;

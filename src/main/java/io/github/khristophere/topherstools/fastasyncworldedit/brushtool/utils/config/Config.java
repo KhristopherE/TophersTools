@@ -1,11 +1,11 @@
 package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.config;
 
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.filemanagement.yml.YMLHandler;
+import io.github.khristophere.topherstools.data.management.yml.YMLHandler;
 
-public class ConfigYML {
+public class Config {
 
     public static YMLHandler configYML;
-    public ConfigYML(){
+    public Config(){
         configYML = new YMLHandler("", "FAWE_BT_Utils_config", true);
         checkIfNeedsDefaults();
         gatherDetails();

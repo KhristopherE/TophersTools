@@ -2,10 +2,11 @@ package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.f
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.filemanagement.sql.SQLManager;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.config.ConfigYML;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolLoadout;
 import io.github.khristophere.topherstools.TophersTools;
+import io.github.khristophere.topherstools.data.management.sql.SQLManager;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.config.Config;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolLoadout;
+import io.github.khristophere.topherstools.scheduler.Scheduler;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
@@ -25,10 +26,10 @@ public class BrushToolSQL {
      * Instantiates this class & the SQLManager for our BrushToolSQL.
      */
     public BrushToolSQL(String filePath, String databaseName){
-        if (!ConfigYML.isRemote) {
+        if (!Config.isRemote) {
             sqlManager = new SQLManager(filePath, databaseName);
         } else {
-            sqlManager = new SQLManager(ConfigYML.host, ConfigYML.port, ConfigYML.databaseName, ConfigYML.username, ConfigYML.password, ConfigYML.useSSL);
+            sqlManager = new SQLManager(Config.host, Config.port, Config.databaseName, Config.username, Config.password, Config.useSSL);
         }
         this.brushToolSQLRequests = new BrushToolSQLRequests(this);
     }
@@ -74,7 +75,7 @@ public class BrushToolSQL {
      * @param username New Username.
      */
     public void updateUsernameSQL(UUID uuid, String username) {
-        TophersTools.getInstance().runSequentialAsync( () -> {
+        Scheduler.runSequentialAsync( () -> {
             String request = "INSERT OR REPLACE INTO Players (uuid, username) VALUES (?, ?);";
             try (Connection c = sqlManager.getConnection(); PreparedStatement sqlRequest = c.prepareStatement(request)) {
                 sqlRequest.setString(1, uuid.toString());
@@ -158,7 +159,7 @@ public class BrushToolSQL {
      * @param material Material Bound.
      */
     public void deleteBrushToolLoadoutSQL(UUID uuid, String material) {
-        TophersTools.getInstance().runSequentialAsync( () -> {
+        Scheduler.runSequentialAsync( () -> {
             String request = "DELETE FROM BrushToolBindings WHERE uuid = ? AND material = ?;";
             try (Connection c = sqlManager.getConnection(); PreparedStatement sqlRequest = c.prepareStatement(request)) {
                 sqlRequest.setString(1, uuid.toString());
@@ -175,7 +176,7 @@ public class BrushToolSQL {
      * @param primaryCommand New Primary Command.
      */
     public void updatePrimaryCommandSQL(UUID uuid, ItemStack itemStack, String primaryCommand) {
-        TophersTools.getInstance().runSequentialAsync( () -> {
+        Scheduler.runSequentialAsync( () -> {
             String request = """
             INSERT INTO BrushToolBindings (uuid, material, primaryCommand, itemStack)
             VALUES (?, ?, ?, ?)
@@ -199,7 +200,7 @@ public class BrushToolSQL {
      * @param secondaryCommand New Primary Command.
      */
     public void updateSecondaryCommandSQL(UUID uuid, ItemStack itemStack, String secondaryCommand) {
-        TophersTools.getInstance().runSequentialAsync( () -> {
+        Scheduler.runSequentialAsync( () -> {
             String request = """
             INSERT INTO BrushToolBindings (uuid, material, secondaryCommand, itemStack)
             VALUES (?, ?, ?, ?)
@@ -223,25 +224,23 @@ public class BrushToolSQL {
      * @param modifierCommands New Primary Command.
      */
     public void updateModifierCommandsSQL(UUID uuid, String material, List<String> modifierCommands) {
-        TophersTools.getInstance().runSequentialAsync( () -> {
-            String request = """
-            INSERT INTO BrushToolBindings (uuid, material, modifierCommands)
-            VALUES (?, ?, ?)
-            ON CONFLICT(uuid, material)
-            DO UPDATE SET modifierCommands = excluded.modifierCommands;
-            """;
-            try (Connection c = sqlManager.getConnection(); PreparedStatement sqlRequest = c.prepareStatement(request)) {
-                sqlRequest.setString(1, uuid.toString());
-                sqlRequest.setString(2, material.toUpperCase());
-                sqlRequest.setString(3, gson.toJson(modifierCommands != null ? modifierCommands : Collections.emptyList()));
-                sqlRequest.executeUpdate();
-            } catch (SQLException e) {
-                AtomicReference<String> modifierCommandsConcatenated = new AtomicReference<>("");
-                if (modifierCommands != null) modifierCommands.forEach(mC -> modifierCommandsConcatenated.set(modifierCommandsConcatenated + mC + ", "));
-                modifierCommandsConcatenated.set(modifierCommandsConcatenated.get().replaceAll(",\\s*$", "."));
-                TophersTools.getInstance().getSLF4JLogger().error("Failed to update Modifier Commands for UUID: {}, for Material: {}, for Modifier Command:\"{}\" in FAWE-BrushTools/SQLData/PlayerData.db", uuid.toString(), material.toUpperCase(), modifierCommandsConcatenated.get(), e);
-            }
-        });
+        String request = """
+        INSERT INTO BrushToolBindings (uuid, material, modifierCommands)
+        VALUES (?, ?, ?)
+        ON CONFLICT(uuid, material)
+        DO UPDATE SET modifierCommands = excluded.modifierCommands;
+        """;
+        try (Connection c = sqlManager.getConnection(); PreparedStatement sqlRequest = c.prepareStatement(request)) {
+            sqlRequest.setString(1, uuid.toString());
+            sqlRequest.setString(2, material.toUpperCase());
+            sqlRequest.setString(3, gson.toJson(modifierCommands != null ? modifierCommands : Collections.emptyList()));
+            sqlRequest.executeUpdate();
+        } catch (SQLException e) {
+            AtomicReference<String> modifierCommandsConcatenated = new AtomicReference<>("");
+            if (modifierCommands != null) modifierCommands.forEach(mC -> modifierCommandsConcatenated.set(modifierCommandsConcatenated + mC + ", "));
+            modifierCommandsConcatenated.set(modifierCommandsConcatenated.get().replaceAll(",\\s*$", "."));
+            TophersTools.getInstance().getSLF4JLogger().error("Failed to update Modifier Commands for UUID: {}, for Material: {}, for Modifier Command:\"{}\" in FAWE-BrushTools/SQLData/PlayerData.db", uuid.toString(), material.toUpperCase(), modifierCommandsConcatenated.get(), e);
+        }
     }
 
     /**
@@ -250,7 +249,7 @@ public class BrushToolSQL {
      * @param material Material Bound.
      */
     public void removeSecondaryCommandSQL(UUID uuid, String material) {
-        TophersTools.getInstance().runSequentialAsync( () -> {
+        Scheduler.runSequentialAsync( () -> {
             String request = "UPDATE BrushToolBindings SET secondaryCommand = NULL WHERE uuid = ? AND material = ?;";
             try (Connection c = sqlManager.getConnection(); PreparedStatement sqlRequest = c.prepareStatement(request)) {
                 sqlRequest.setString(1, uuid.toString());
@@ -266,7 +265,7 @@ public class BrushToolSQL {
      * @param material Material Bound.
      */
     public void removeModifierCommandsSQL(UUID uuid, String material) {
-        TophersTools.getInstance().runSequentialAsync( () -> {
+        Scheduler.runSequentialAsync( () -> {
             String sql = "UPDATE BrushToolBindings SET modifierCommands = ? WHERE uuid = ? AND material = ?;";
             try (Connection conn = sqlManager.getConnection(); PreparedStatement sqlRequest = conn.prepareStatement(sql)) {
                 sqlRequest.setString(1, gson.toJson(Collections.emptyList()));

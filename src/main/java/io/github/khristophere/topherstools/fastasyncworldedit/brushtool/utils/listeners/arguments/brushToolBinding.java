@@ -7,11 +7,11 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.command.tool.Tool;
 import com.sk89q.worldedit.event.platform.CommandEvent;
 import com.sk89q.worldedit.world.item.ItemType;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolLoadout;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolCommandLogic;
-import io.github.khristophere.topherstools.TophersTools;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
+import io.github.khristophere.topherstools.scheduler.Scheduler;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -62,7 +62,7 @@ public class brushToolBinding {
          *  Although, before that we will provide the player with a clickable chat message to reapply all the prior brush commands.
          */
         if (hadPreviousTool && isSecondaryBinding && newToolStringReference.isEmpty()) {
-            TophersTools.getInstance().runSequentialAsync( () -> {
+            Scheduler.runSequentialAsync( () -> {
                 BrushToolLoadout oldLoadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(player.getUniqueId(), minecraftItemInHand.getType().name());
                 if (oldLoadout != null && !oldLoadout.isBrushToolLoadoutEmpty()) {
                     player.sendMessage(oldLoadout.getLoadoutPromptMessage());

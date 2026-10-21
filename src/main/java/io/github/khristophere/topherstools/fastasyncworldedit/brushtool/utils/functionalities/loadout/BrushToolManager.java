@@ -1,7 +1,8 @@
 package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout;
 
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.SQL.BrushToolSQL;
 import io.github.khristophere.topherstools.TophersTools;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.SQL.BrushToolSQL;
+import io.github.khristophere.topherstools.scheduler.Scheduler;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,13 +22,13 @@ public class BrushToolManager {
         //Instantiates the BrushToolSQL, and makes it public static accessible.
         brushToolSQL = new BrushToolSQL("FAWE-BrushTools/SQLData", "PlayerData");
         //Makes an Async Call to Initialize the SQL Table, and get All Players in The SQL.
-        TophersTools.getInstance().runSequentialAsync( () -> {
+        Scheduler.runSequentialAsync( () -> {
             brushToolSQL.initializeTable();
             Map<UUID, List<String>> allUUIDsToListMaterialsBoundACM = brushToolSQL.getUUIDMaterialMapSQL();
             Map<String, UUID> allPlayersInSQLACM = brushToolSQL.getUsernameUUIDMapSQL();
             // Schedules it to run on the main thread to avoid concurrent modification.
             List<String> brushToolMacrosAvailableACM = collectAllBrushToolLoadoutMacros();
-            TophersTools.getInstance().runOnPrimaryThread(( () -> {
+            Scheduler.runOnPrimaryThread(( () -> {
                 allUUIDsToListMaterialsBound = allUUIDsToListMaterialsBoundACM;
                 allPlayersInSQL = allPlayersInSQLACM;
                 brushToolLoadoutMacrosAvailable = brushToolMacrosAvailableACM;

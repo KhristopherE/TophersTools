@@ -1,4 +1,4 @@
-package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.filemanagement.sql;
+package io.github.khristophere.topherstools.data.management.sql;
 
 import io.github.khristophere.topherstools.TophersTools;
 

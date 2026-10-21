@@ -1,14 +1,14 @@
-package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.clearAllBrushTools.commandHandler;
+package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btclearall;
 
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.blocks.BaseItem;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
-import io.github.khristophere.topherstools.TophersTools;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.utilities.Utils;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolManager;
+import io.github.khristophere.topherstools.scheduler.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -21,16 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class clearAllBrushToolsCommand {
+public class BTClearAll {
 
-    /**
-     * Instantiates the ClearAllBrushTools Command.
-     */
-    public clearAllBrushToolsCommand(){
+    public BTClearAll(){
         Utils.registerClassWithCommandManager(this);
         this.coolDowns = new Cooldown(10000);
     }
-
     private final Cooldown coolDowns;
 
     /**
@@ -45,10 +41,10 @@ public class clearAllBrushToolsCommand {
     private void clearALlBrushTools(Source sender) {
         if (sender.source() instanceof Player player) {
             UUID uuid = player.getUniqueId();
-            TophersTools.getInstance().runSequentialAsync( () -> {
+            Scheduler.runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
                 List<String> allMaterialsInFileForUUID = BrushToolManager.allUUIDsToListMaterialsBound.get(player.getUniqueId());
-                TophersTools.getInstance().runOnPrimaryThread(( () -> {
+                Scheduler.runOnPrimaryThread(( () -> {
                     Player playerMainThread = Bukkit.getPlayer(uuid);
                     if (playerMainThread == null || !playerMainThread.isOnline()) return;
                     if (allMaterialsInFileForUUID == null || allMaterialsInFileForUUID.isEmpty()) {
