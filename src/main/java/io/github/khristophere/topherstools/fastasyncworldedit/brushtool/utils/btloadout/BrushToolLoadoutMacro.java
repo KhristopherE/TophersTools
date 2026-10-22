@@ -1,13 +1,11 @@
-package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.brushtoolmacro;
+package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout;
 
 import io.github.khristophere.topherstools.data.management.yml.YMLHandler;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btmacro.dkmacros.DKFirstMacro;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolLoadout;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolCommandLogic;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolModifier;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.utilities.Utils;
+import io.github.khristophere.topherstools.globalutils.Utils;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -21,7 +19,7 @@ import java.util.UUID;
 public class BrushToolLoadoutMacro {
 
     public final YMLHandler macroYML;
-    private final HashMap<Integer, BrushToolLoadout> brushToolLoadoutMap = new HashMap<>();
+    private final HashMap<Integer, BTLoadout> brushToolLoadoutMap = new HashMap<>();
     private final String macroName;
 
     public BrushToolLoadoutMacro(String fileName){
@@ -48,8 +46,8 @@ public class BrushToolLoadoutMacro {
             for (int i = 0; i <= 35; i++){
                 ItemStack item = onlinePlayer.getInventory().getItem(i);
                 if (item != null){
-                    BrushToolLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(onlinePlayer.getUniqueId(), item.getType().name());
-                    if (loadout != null && !loadout.isBrushToolLoadoutEmpty()) {
+                    BTLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(onlinePlayer.getUniqueId(), item.getType().name());
+                    if (loadout != null && !loadout.isEmpty()) {
                         saveLoadout(i, loadout);
                     }
                 }
@@ -107,16 +105,16 @@ public class BrushToolLoadoutMacro {
     }
 
     /**
-     * Saves a given BrushToolLoadout to the YML File at a given InventorySlot.
+     * Saves a given BTLoadout to the YML File at a given InventorySlot.
      * @param inventorySlot The inventory slot #.
-     * @param brushToolLoadout The BrushToolLoadout to save.
+     * @param BTLoadout The BTLoadout to save.
      */
-    private void saveLoadout(int inventorySlot, BrushToolLoadout brushToolLoadout){
-        macroYML.getConfig().set("InventorySlot." + inventorySlot + ".Material", brushToolLoadout.getMaterial());
-        macroYML.getConfig().set("InventorySlot." + inventorySlot + ".Item", brushToolLoadout.getCustomItem());
-        macroYML.getConfig().set("InventorySlot." + inventorySlot + ".PrimaryCommand", brushToolLoadout.getPrimaryCommand());
-        macroYML.getConfig().set("InventorySlot." + inventorySlot + ".SecondaryCommand", brushToolLoadout.getSecondaryCommand());
-        saveBrushToolModifiers(inventorySlot, brushToolLoadout.getModifiers());
+    private void saveLoadout(int inventorySlot, BTLoadout BTLoadout){
+        macroYML.getConfig().set("InventorySlot." + inventorySlot + ".Material", BTLoadout.getMaterial());
+        macroYML.getConfig().set("InventorySlot." + inventorySlot + ".Item", BTLoadout.getCustomItem());
+        macroYML.getConfig().set("InventorySlot." + inventorySlot + ".PrimaryCommand", BTLoadout.getPrimaryCommand());
+        macroYML.getConfig().set("InventorySlot." + inventorySlot + ".SecondaryCommand", BTLoadout.getSecondaryCommand());
+        saveBrushToolModifiers(inventorySlot, BTLoadout.getModifiers());
     }
 
     /**
@@ -135,12 +133,12 @@ public class BrushToolLoadoutMacro {
     }
 
     /**
-     * Gathers the loadout's details from the YML File & Returns a BrushToolLoadout object.
+     * Gathers the loadout's details from the YML File & Returns a BTLoadout object.
      * @param inventorySlot the inventory slot as stored in the YML File.
-     * @return BrushToolLoadout
+     * @return BTLoadout
      */
-    private BrushToolLoadout getLoadout(int inventorySlot){
-        return new BrushToolLoadout(
+    private BTLoadout getLoadout(int inventorySlot){
+        return new BTLoadout(
                 macroYML.getConfig().getString("InventorySlot." + inventorySlot + ".Material"),
                 macroYML.getConfig().getItemStack("InventorySlot." + inventorySlot + ".Item"),
                 macroYML.getConfig().getString("InventorySlot." + inventorySlot + ".PrimaryCommand"),

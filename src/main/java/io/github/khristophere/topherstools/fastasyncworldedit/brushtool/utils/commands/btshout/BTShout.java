@@ -1,10 +1,10 @@
 package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btshout;
 
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolLoadout;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolManager;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTLoadout;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BrushToolManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.utilities.Utils;
+import io.github.khristophere.topherstools.globalutils.Utils;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -39,8 +39,8 @@ public class BTShout {
         if (sender.source() instanceof Player player) {
             Scheduler.runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
-                BrushToolLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
-                if (loadout != null && !loadout.isBrushToolLoadoutEmpty()) {
+                BTLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
+                if (loadout != null && !loadout.isEmpty()) {
                     player.sendMessage(PlayerMessages.BrushTool_Info_Below_Self.getMessage());
                     player.sendMessage(loadout.getLoadoutPromptMessage());
                     player.sendMessage(PlayerMessages.BrushTool_Shared_With_Everyone.getMessage());

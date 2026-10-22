@@ -1,10 +1,10 @@
 package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btreturnall;
 
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTLoadout;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolLoadout;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolManager;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BrushToolManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.utilities.Utils;
+import io.github.khristophere.topherstools.globalutils.Utils;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -46,10 +46,10 @@ public class BTReturnAll {
                     return;
                 }
                 boolean didAnyLoadoutApply = false;
-                List<BrushToolLoadout> loadoutList = new ArrayList<>();
+                List<BTLoadout> loadoutList = new ArrayList<>();
                 for (String materialInFile : allMaterialsInFileForUUID){
-                    BrushToolLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(uuid, materialInFile);
-                    if (loadout != null && !loadout.isBrushToolLoadoutEmpty()){
+                    BTLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(uuid, materialInFile);
+                    if (loadout != null && !loadout.isEmpty()){
                         Scheduler.runOnPrimaryThread(( () -> {
                             loadoutList.add(loadout);
                             Player playerMainThread = Bukkit.getPlayer(uuid);
@@ -74,7 +74,7 @@ public class BTReturnAll {
                     Player playerMainThread = Bukkit.getPlayer(uuid);
                     if (playerMainThread != null && playerMainThread.isOnline() && finalDidAnyLoadoutApply) {
                         Utils.clearInventorySlotsFromTo(playerMainThread, 0, 35);
-                        for (BrushToolLoadout loadoutInList : loadoutList) {
+                        for (BTLoadout loadoutInList : loadoutList) {
                             if (loadoutInList.hasCustomItem()){
                                 assert loadoutInList.getCustomItem() != null;
                                 player.getInventory().addItem(loadoutInList.getCustomItem());

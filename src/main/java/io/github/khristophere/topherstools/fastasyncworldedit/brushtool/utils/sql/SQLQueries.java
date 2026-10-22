@@ -1,4 +1,4 @@
-package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.SQL;
+package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.sql;
 
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.config.Config;
 

@@ -1,10 +1,10 @@
 package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btget;
 
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTLoadout;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolLoadout;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolManager;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BrushToolManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.utilities.Utils;
+import io.github.khristophere.topherstools.globalutils.Utils;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -43,8 +43,8 @@ public class BTGet {
         if (sender.source() instanceof Player player) {
             Scheduler.runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
-                BrushToolLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
-                if (loadout != null && !loadout.isBrushToolLoadoutEmpty()) {
+                BTLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
+                if (loadout != null && !loadout.isEmpty()) {
                     player.sendMessage(PlayerMessages.BrushTool_Info_Below_Self.getMessage());
                     player.sendMessage(loadout.getLoadoutPromptMessage());
                 } else {
@@ -74,8 +74,8 @@ public class BTGet {
                 if (onlinePlayer == null) {
                     player.sendMessage(PlayerMessages.BrushTool_Info_Inquiry_Player_Offline_Requesting_Specify_Material.getMessage());
                 } else {
-                    BrushToolLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(onlinePlayer.getUniqueId(), onlinePlayer.getInventory().getItemInMainHand().getType().name());
-                    if (loadout != null && !loadout.isBrushToolLoadoutEmpty()) {
+                    BTLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(onlinePlayer.getUniqueId(), onlinePlayer.getInventory().getItemInMainHand().getType().name());
+                    if (loadout != null && !loadout.isEmpty()) {
                         player.sendMessage(PlayerMessages.BrushTool_Info_Below_Specified_Player.getMessage(onlinePlayer.getName()));
                         player.sendMessage(loadout.getLoadoutPromptMessage());
                     } else {
@@ -104,8 +104,8 @@ public class BTGet {
             Scheduler.runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
                 UUID requestedPlayerUUID = BrushToolManager.allPlayersInSQL.get(requestedPlayer);
-                BrushToolLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(requestedPlayerUUID, requestedMaterial.toUpperCase());
-                if (loadout != null && !loadout.isBrushToolLoadoutEmpty()) {
+                BTLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(requestedPlayerUUID, requestedMaterial.toUpperCase());
+                if (loadout != null && !loadout.isEmpty()) {
                     player.sendMessage(PlayerMessages.BrushTool_Info_Below_Specified_Player_Specified_Material.getMessage(requestedPlayer, requestedMaterial));
                     player.sendMessage(loadout.getLoadoutPromptMessage());
                 } else {

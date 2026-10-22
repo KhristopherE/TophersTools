@@ -1,6 +1,6 @@
-package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.SQL;
+package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.sql;
 
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolManager;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BrushToolManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolCommandLogic;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolModifier;
 import org.bukkit.inventory.ItemStack;

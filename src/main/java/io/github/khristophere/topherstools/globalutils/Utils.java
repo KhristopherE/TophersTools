@@ -1,4 +1,4 @@
-package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.utilities;
+package io.github.khristophere.topherstools.globalutils;
 
 import io.github.khristophere.topherstools.TophersTools;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;

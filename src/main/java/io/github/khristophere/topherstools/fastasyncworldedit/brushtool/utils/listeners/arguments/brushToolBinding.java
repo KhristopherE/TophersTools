@@ -7,8 +7,8 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.command.tool.Tool;
 import com.sk89q.worldedit.event.platform.CommandEvent;
 import com.sk89q.worldedit.world.item.ItemType;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolLoadout;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolManager;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTLoadout;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BrushToolManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolCommandLogic;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
@@ -63,8 +63,8 @@ public class brushToolBinding {
          */
         if (hadPreviousTool && isSecondaryBinding && newToolStringReference.isEmpty()) {
             Scheduler.runSequentialAsync( () -> {
-                BrushToolLoadout oldLoadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(player.getUniqueId(), minecraftItemInHand.getType().name());
-                if (oldLoadout != null && !oldLoadout.isBrushToolLoadoutEmpty()) {
+                BTLoadout oldLoadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(player.getUniqueId(), minecraftItemInHand.getType().name());
+                if (oldLoadout != null && !oldLoadout.isEmpty()) {
                     player.sendMessage(oldLoadout.getLoadoutPromptMessage());
                     player.sendMessage(PlayerMessages.getBuggedStateSecondaryBrushInvalidMessage());
                 }

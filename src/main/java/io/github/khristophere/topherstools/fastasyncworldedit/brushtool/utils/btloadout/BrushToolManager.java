@@ -1,7 +1,7 @@
-package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout;
+package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout;
 
 import io.github.khristophere.topherstools.TophersTools;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.SQL.BrushToolSQL;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.sql.BrushToolSQL;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
 
 import java.io.IOException;

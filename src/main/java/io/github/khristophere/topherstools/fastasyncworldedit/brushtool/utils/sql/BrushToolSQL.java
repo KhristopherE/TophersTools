@@ -1,11 +1,11 @@
-package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.SQL;
+package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.sql;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.github.khristophere.topherstools.TophersTools;
 import io.github.khristophere.topherstools.data.management.sql.SQLManager;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTLoadout;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.config.Config;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.functionalities.loadout.BrushToolLoadout;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
 import org.bukkit.inventory.ItemStack;
 
@@ -124,13 +124,13 @@ public class BrushToolSQL {
     }
 
     /**
-     * Gets either the BrushToolLoadout found, or null if nothing was found.
+     * Gets either the BTLoadout found, or null if nothing was found.
      * @param uuid Requested Players UUID.
      * @param material Material Bound.
-     * @return either a BrushToolLoadout or Null if there is no BrushTool found.
+     * @return either a BTLoadout or Null if there is no BrushTool found.
      */
     @Nullable
-    public BrushToolLoadout getBrushToolLoadoutSQL(UUID uuid, String material) {
+    public BTLoadout getBrushToolLoadoutSQL(UUID uuid, String material) {
         if (uuid == null || material == null) return null;
         String request = SQLQueries.getBrushToolLoadoutSQL;
         try (Connection conn = sqlManager.getConnection(); PreparedStatement sqlRequest = conn.prepareStatement(request)) {
@@ -146,15 +146,15 @@ public class BrushToolSQL {
                     if (itemBytes != null) {
                         itemStack = ItemStack.deserializeBytes(itemBytes);
                     }
-                    return new BrushToolLoadout(material, itemStack, primaryCommand, secondaryCommand, modifierCommands);
+                    return new BTLoadout(material, itemStack, primaryCommand, secondaryCommand, modifierCommands);
                 }
             }
-        } catch (SQLException e) {TophersTools.getInstance().getSLF4JLogger().error("Failed to get BrushToolLoadout for UUID: {}, for Material: {} from FAWE-BrushTools/SQLData/PlayerData.db", uuid.toString(), material.toUpperCase(), e);}
+        } catch (SQLException e) {TophersTools.getInstance().getSLF4JLogger().error("Failed to get BTLoadout for UUID: {}, for Material: {} from FAWE-BrushTools/SQLData/PlayerData.db", uuid.toString(), material.toUpperCase(), e);}
         return null;
     }
 
     /**
-     * Deletes the requested UUID's Material's BrushToolLoadout from the SQL File.
+     * Deletes the requested UUID's Material's BTLoadout from the SQL File.
      * @param uuid Requested Players UUID.
      * @param material Material Bound.
      */
@@ -165,7 +165,7 @@ public class BrushToolSQL {
                 sqlRequest.setString(1, uuid.toString());
                 sqlRequest.setString(2, material.toUpperCase());
                 sqlRequest.executeUpdate();
-            } catch (SQLException e) {TophersTools.getInstance().getSLF4JLogger().error("Failed to delete BrushToolLoadout for UUID: {}, for Material: {} in FAWE-BrushTools/SQLData/PlayerData.db", uuid.toString(), material.toUpperCase(), e);}
+            } catch (SQLException e) {TophersTools.getInstance().getSLF4JLogger().error("Failed to delete BTLoadout for UUID: {}, for Material: {} in FAWE-BrushTools/SQLData/PlayerData.db", uuid.toString(), material.toUpperCase(), e);}
         });
     }
 
