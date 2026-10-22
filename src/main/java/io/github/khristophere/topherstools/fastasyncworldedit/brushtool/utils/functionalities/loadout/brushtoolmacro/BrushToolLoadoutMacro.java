@@ -25,7 +25,7 @@ public class BrushToolLoadoutMacro {
     private final String macroName;
 
     public BrushToolLoadoutMacro(String fileName){
-        this.macroYML = new YMLHandler("FAWE-BrushTools/BrushToolMacros", fileName, false);
+        this.macroYML = new YMLHandler("FAWE-BT-Utils/Macros", fileName, false);
         this.macroName = fileName;
     }
 

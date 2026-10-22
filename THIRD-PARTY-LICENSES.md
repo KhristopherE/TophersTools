@@ -69,3 +69,20 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+================================================================================
+4. MySQL Connector/J
+   ================================================================================
+   Project: MySQL Connector/J
+   Website: https://github.com/mysql/mysql-connector-j
+   Copyright: (c) Oracle Corporation and/or its affiliates
+   License: GNU General Public License, v2 with Universal FOSS Exception, v1.0
+
+This software is released under version 2 of the GNU General Public License (GPLv2),
+with the Universal FOSS Exception, version 1.0.
+
+The full text of the GNU General Public License v2 can be found at:
+https://www.gnu.org/licenses/gpl-2.0.html
+
+The terms of the Universal FOSS Exception can be viewed at:
+http://oss.oracle.com/licenses/universal-foss-exception

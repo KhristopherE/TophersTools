@@ -23,6 +23,8 @@ dependencies {
     implementation("org.incendo:cloud-paper:2.0.1")
     implementation("org.incendo:cloud-annotations:2.0.1")
 
+    implementation("com.mysql:mysql-connector-j:26.10.0")
+
     constraints {
         implementation("org.apache.commons:commons-lang3:3.18.0") {
             because("Fixes CVE-2025-48924 stack overflow vulnerability in ClassUtils")

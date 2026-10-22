@@ -30,6 +30,13 @@ public class BrushToolSQL {
             sqlManager = new SQLManager(filePath, databaseName);
         } else {
             sqlManager = new SQLManager(Config.host, Config.port, Config.databaseName, Config.username, Config.password, Config.useSSL);
+            try {
+                sqlManager.getConnection();
+            } catch (SQLException e) {
+                TophersTools.getInstance().getSLF4JLogger().error("Failed to connect to Remote SQL Server, Defaulting to Local.", e);
+                Config.isRemote = false;
+                sqlManager = new SQLManager(filePath, databaseName);
+            }
         }
         this.brushToolSQLRequests = new BrushToolSQLRequests(this);
     }
@@ -40,33 +47,26 @@ public class BrushToolSQL {
      * A table for the Brush Bindings, UUID, Material with it's associated Primary & OR Secondary Commands, & Modifiers.
      */
     public void initializeTable(){
-        String requestCreatePlayersTable = """
-            CREATE TABLE IF NOT EXISTS Players (
-                uuid VARCHAR(36) PRIMARY KEY,
-                username VARCHAR(16) NOT NULL
-            );
-            """;
-        String requestCreateBrushToolBindingsTable = """
-            CREATE TABLE IF NOT EXISTS BrushToolBindings (
-                uuid VARCHAR(36) NOT NULL,
-                material VARCHAR(64) NOT NULL,
-                primaryCommand TEXT,
-                secondaryCommand TEXT,
-                modifierCommands TEXT,
-                itemStack BLOB,
-                PRIMARY KEY (uuid, material)
-            );
-            """;
-        String requestCreateUsernameToUUIDIndex = """
-                CREATE INDEX IF NOT EXISTS UsernamesToUUID ON Players(username COLLATE NOCASE);
-                """;
-        boolean rCPT = sqlManager.makeRequest(requestCreatePlayersTable);
-        boolean rCBT = sqlManager.makeRequest(requestCreateBrushToolBindingsTable);
-        boolean rCUTUI = sqlManager.makeRequest(requestCreateUsernameToUUIDIndex);
-        if (!rCPT) TophersTools.getInstance().getLogger().severe("Database Request Create Players Table Failed!");
-        if (!rCBT) TophersTools.getInstance().getLogger().severe("Database Request Create BrushToolBindings Table Failed!");
-        if (!rCUTUI) TophersTools.getInstance().getLogger().severe("Database Request Create UsernamesToUUID Index Failed!");
-        if (!rCPT && !rCBT && !rCUTUI) TophersTools.getInstance().getLogger().severe("FAWE-BrushTools/SQLData/PlayerData.db has failed to initialize");
+        boolean anyFail = false;
+        try (Connection c = sqlManager.getConnection(); Statement s = c.createStatement()) {
+            s.execute(SQLQueries.requestCreatePlayersTable);
+        } catch (SQLException e) {
+            TophersTools.getInstance().getSLF4JLogger().error("Database Request Create Players Table Failed!", e);
+            anyFail = true;
+        }
+        try (Connection c = sqlManager.getConnection(); Statement s = c.createStatement()) {
+            s.execute(SQLQueries.requestCreateBrushToolBindingsTable);
+        } catch (SQLException e) {
+            TophersTools.getInstance().getSLF4JLogger().error("Database Request Create BrushToolBindings Table Failed!", e);
+            anyFail = true;
+        }
+        try (Connection c = sqlManager.getConnection(); Statement s = c.createStatement()) {
+            s.execute(SQLQueries.requestCreateUsernameToUUIDIndex());
+        } catch (SQLException e) {
+            TophersTools.getInstance().getSLF4JLogger().error("Database Request Create UsernamesToUUID Index Failed!", e);
+            anyFail = true;
+        }
+        if (anyFail) TophersTools.getInstance().getLogger().severe("FAWE-BrushTools/SQLData/PlayerData.db has failed to initialize");
     }
 
     /**
@@ -76,7 +76,7 @@ public class BrushToolSQL {
      */
     public void updateUsernameSQL(UUID uuid, String username) {
         Scheduler.runSequentialAsync( () -> {
-            String request = "INSERT OR REPLACE INTO Players (uuid, username) VALUES (?, ?);";
+            String request = SQLQueries.updateUsernameSQL;
             try (Connection c = sqlManager.getConnection(); PreparedStatement sqlRequest = c.prepareStatement(request)) {
                 sqlRequest.setString(1, uuid.toString());
                 sqlRequest.setString(2, username);
@@ -91,7 +91,7 @@ public class BrushToolSQL {
      */
     public Map<String, UUID> getUsernameUUIDMapSQL() {
         Map<String, UUID> usernameUUIDMap = new HashMap<>();
-        String request = "SELECT uuid, username FROM Players;";
+        String request = SQLQueries.getUsernameUUIDMapSQL;
         try (Connection c = sqlManager.getConnection();
              Statement sqlRequest = c.createStatement();
              ResultSet resultSet = sqlRequest.executeQuery(request)) {
@@ -110,7 +110,7 @@ public class BrushToolSQL {
      */
     public Map<UUID, List<String>> getUUIDMaterialMapSQL() {
         Map<UUID, List<String>> UUIDMaterialMap = new HashMap<>();
-        String request = "SELECT uuid, material FROM BrushToolBindings;";
+        String request = SQLQueries.getUUIDMaterialMapSQL;
         try (Connection c = sqlManager.getConnection();
              Statement sqlRequest = c.createStatement();
              ResultSet resultSet = sqlRequest.executeQuery(request)) {
@@ -132,7 +132,7 @@ public class BrushToolSQL {
     @Nullable
     public BrushToolLoadout getBrushToolLoadoutSQL(UUID uuid, String material) {
         if (uuid == null || material == null) return null;
-        String request = "SELECT primaryCommand, secondaryCommand, itemStack FROM BrushToolBindings WHERE uuid = ? AND material = ?;";
+        String request = SQLQueries.getBrushToolLoadoutSQL;
         try (Connection conn = sqlManager.getConnection(); PreparedStatement sqlRequest = conn.prepareStatement(request)) {
             sqlRequest.setString(1, uuid.toString());
             sqlRequest.setString(2, material.toUpperCase());
@@ -160,7 +160,7 @@ public class BrushToolSQL {
      */
     public void deleteBrushToolLoadoutSQL(UUID uuid, String material) {
         Scheduler.runSequentialAsync( () -> {
-            String request = "DELETE FROM BrushToolBindings WHERE uuid = ? AND material = ?;";
+            String request = SQLQueries.deleteBrushToolLoadoutSQL;
             try (Connection c = sqlManager.getConnection(); PreparedStatement sqlRequest = c.prepareStatement(request)) {
                 sqlRequest.setString(1, uuid.toString());
                 sqlRequest.setString(2, material.toUpperCase());
@@ -177,12 +177,7 @@ public class BrushToolSQL {
      */
     public void updatePrimaryCommandSQL(UUID uuid, ItemStack itemStack, String primaryCommand) {
         Scheduler.runSequentialAsync( () -> {
-            String request = """
-            INSERT INTO BrushToolBindings (uuid, material, primaryCommand, itemStack)
-            VALUES (?, ?, ?, ?)
-            ON CONFLICT(uuid, material)
-            DO UPDATE SET primaryCommand = excluded.primaryCommand;
-            """;
+            String request = SQLQueries.updatePrimaryCommandSQL();
             try (Connection c = sqlManager.getConnection(); PreparedStatement sqlRequest = c.prepareStatement(request)) {
                 sqlRequest.setString(1, uuid.toString());
                 sqlRequest.setString(2, itemStack.getType().name());
@@ -201,12 +196,7 @@ public class BrushToolSQL {
      */
     public void updateSecondaryCommandSQL(UUID uuid, ItemStack itemStack, String secondaryCommand) {
         Scheduler.runSequentialAsync( () -> {
-            String request = """
-            INSERT INTO BrushToolBindings (uuid, material, secondaryCommand, itemStack)
-            VALUES (?, ?, ?, ?)
-            ON CONFLICT(uuid, material)
-            DO UPDATE SET secondaryCommand = excluded.secondaryCommand;
-            """;
+            String request = SQLQueries.updateSecondaryCommandSQL();
             try (Connection c = sqlManager.getConnection(); PreparedStatement sqlRequest = c.prepareStatement(request)) {
                 sqlRequest.setString(1, uuid.toString());
                 sqlRequest.setString(2, itemStack.getType().name());
@@ -224,12 +214,7 @@ public class BrushToolSQL {
      * @param modifierCommands New Primary Command.
      */
     public void updateModifierCommandsSQL(UUID uuid, String material, List<String> modifierCommands) {
-        String request = """
-        INSERT INTO BrushToolBindings (uuid, material, modifierCommands)
-        VALUES (?, ?, ?)
-        ON CONFLICT(uuid, material)
-        DO UPDATE SET modifierCommands = excluded.modifierCommands;
-        """;
+        String request = SQLQueries.updateModifierCommandsSQL();
         try (Connection c = sqlManager.getConnection(); PreparedStatement sqlRequest = c.prepareStatement(request)) {
             sqlRequest.setString(1, uuid.toString());
             sqlRequest.setString(2, material.toUpperCase());
@@ -250,7 +235,7 @@ public class BrushToolSQL {
      */
     public void removeSecondaryCommandSQL(UUID uuid, String material) {
         Scheduler.runSequentialAsync( () -> {
-            String request = "UPDATE BrushToolBindings SET secondaryCommand = NULL WHERE uuid = ? AND material = ?;";
+            String request = SQLQueries.removeSecondaryCommandSQL;
             try (Connection c = sqlManager.getConnection(); PreparedStatement sqlRequest = c.prepareStatement(request)) {
                 sqlRequest.setString(1, uuid.toString());
                 sqlRequest.setString(2, material.toUpperCase());
@@ -266,7 +251,7 @@ public class BrushToolSQL {
      */
     public void removeModifierCommandsSQL(UUID uuid, String material) {
         Scheduler.runSequentialAsync( () -> {
-            String sql = "UPDATE BrushToolBindings SET modifierCommands = ? WHERE uuid = ? AND material = ?;";
+            String sql = SQLQueries.removeModifierCommandsSQL;
             try (Connection conn = sqlManager.getConnection(); PreparedStatement sqlRequest = conn.prepareStatement(sql)) {
                 sqlRequest.setString(1, gson.toJson(Collections.emptyList()));
                 sqlRequest.setString(2, uuid.toString());
@@ -284,7 +269,7 @@ public class BrushToolSQL {
      */
     public List<String> getModifiersRawSQL(UUID uuid, String material) {
         if (uuid == null || material == null) return new ArrayList<>();
-        String sql = "SELECT modifierCommands FROM BrushToolBindings WHERE uuid = ? AND material = ?;";
+        String sql = SQLQueries.getModifiersRawSQL;
         try (Connection c = sqlManager.getConnection(); PreparedStatement sqlRequest = c.prepareStatement(sql)) {
             sqlRequest.setString(1, uuid.toString());
             sqlRequest.setString(2, material.toUpperCase());

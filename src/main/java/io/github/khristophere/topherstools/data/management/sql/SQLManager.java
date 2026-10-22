@@ -5,7 +5,6 @@ import io.github.khristophere.topherstools.TophersTools;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -54,21 +53,9 @@ public class SQLManager {
         this.username = username;
         this.password = password;
         this.connectionURL = String.format(
-                "jdbc:mysql://%s:%d/%s?useSSL=%b&autoReconnect=true&allowPublicKeyRetrieval=true",
+                "jdbc:mysql://%s:%d/%s?useSSL=%b&autoReconnect=true&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true",
                 host, port, databaseName, useSSL
         );
-    }
-
-    @SuppressWarnings("SqlSourceToSinkFlow")
-    public boolean makeRequest(String sqlRequest) {
-        try (Connection connection = DriverManager.getConnection(connectionURL);
-             Statement statement = connection.createStatement()) {
-            statement.execute(sqlRequest);
-            return true;
-        } catch (SQLException e) {
-            TophersTools.getInstance().getSLF4JLogger().error("Database Request Failed", e);
-            return false;
-        }
     }
 
     public Connection getConnection() throws SQLException {

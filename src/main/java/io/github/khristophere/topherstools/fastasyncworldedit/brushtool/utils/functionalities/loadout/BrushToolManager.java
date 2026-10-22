@@ -20,7 +20,7 @@ public class BrushToolManager {
 
     public BrushToolManager(){
         //Instantiates the BrushToolSQL, and makes it public static accessible.
-        brushToolSQL = new BrushToolSQL("FAWE-BrushTools/SQLData", "PlayerData");
+        brushToolSQL = new BrushToolSQL("FAWE-BT-Utils/SQLData", "PlayerBindings");
         //Makes an Async Call to Initialize the SQL Table, and get All Players in The SQL.
         Scheduler.runSequentialAsync( () -> {
             brushToolSQL.initializeTable();

@@ -2,11 +2,14 @@ package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.c
 
 import io.github.khristophere.topherstools.data.management.yml.YMLHandler;
 
+import java.util.List;
+import java.util.Optional;
+
 public class Config {
 
     public static YMLHandler configYML;
     public Config(){
-        configYML = new YMLHandler("", "FAWE_BT_Utils_config", true);
+        configYML = new YMLHandler("FAWE-BT-Utils", "config", true);
         checkIfNeedsDefaults();
         gatherDetails();
     }
@@ -21,26 +24,27 @@ public class Config {
 
     private void checkIfNeedsDefaults(){
         if (configYML.getConfig().getKeys(false).isEmpty()){
-            configYML.getConfig().set("database.FAWEBTUtils.type.isremote", false);
-            configYML.getConfig().set("database.FAWEBTUtils.remote.settings.host", "ExampleHost.Example");
-            configYML.getConfig().set("database.FAWEBTUtils.remote.settings.port", 1234);
-            configYML.getConfig().set("database.FAWEBTUtils.remote.settings.database-name", "database-name");
-            configYML.getConfig().set("database.FAWEBTUtils.remote.settings.username", "username");
-            configYML.getConfig().set("database.FAWEBTUtils.remote.settings.password", "password");
-            configYML.getConfig().set("database.FAWEBTUtils.remote.settings.use-ssl", false);
+            configYML.getConfig().setComments("SQLData.Remote", List.of("Use Remote Database: False will utilize SQLite locally. True is compatible with MySQL & MariaDB"));
+            configYML.getConfig().set("SQLData.Remote.UseRemoteDatabase", false);
+            configYML.getConfig().set("SQLData.Remote.Settings.Host", "");
+            configYML.getConfig().set("SQLData.Remote.Settings.Port", "");
+            configYML.getConfig().set("SQLData.Remote.Settings.Database-Name", "");
+            configYML.getConfig().set("SQLData.Remote.Settings.Username", "");
+            configYML.getConfig().set("SQLData.Remote.Settings.Password", "");
+            configYML.getConfig().set("SQLData.Remote.Settings.Use-SSL", false);
             configYML.saveConfig();
         }
     }
 
     private void gatherDetails(){
-        isRemote = configYML.getConfig().getBoolean("database.type.isremote");
+        isRemote = configYML.getConfig().getBoolean("SQLData.Remote.UseRemoteDatabase");
         if (isRemote) {
-            host = configYML.getConfig().getString("database.FAWEBTUtils.remote.settings.host");
-            port = configYML.getConfig().getInt("database.FAWEBTUtils.remote.settings.port");
-            databaseName = configYML.getConfig().getString("database.FAWEBTUtils.remote.settings.database-name");
-            username = configYML.getConfig().getString("database.FAWEBTUtils.remote.settings.username");
-            password = configYML.getConfig().getString("database.FAWEBTUtils.remote.settings.password");
-            useSSL = configYML.getConfig().getBoolean("database.FAWEBTUtils.remote.settings.use-ssl");
+            host = configYML.getConfig().getString("SQLData.Remote.Settings.Host");
+            port = configYML.getConfig().getInt("SQLData.Remote.Settings.Port");
+            databaseName = configYML.getConfig().getString("SQLData.Remote.Settings.Database-Name");
+            username = configYML.getConfig().getString("SQLData.Remote.Settings.Username");
+            password = Optional.ofNullable(configYML.getConfig().getString("SQLData.Remote.Settings.Password")).orElse("");
+            useSSL = configYML.getConfig().getBoolean("SQLData.Remote.Settings.Use-SSL");
         }
     }
 

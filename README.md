@@ -68,6 +68,11 @@ The following libraries are bundled directly inside the `TophersTools` compiled 
   * **Copyright:** © The Apache Software Foundation
   * Core Java utility helper classes (included as a dependency constraint).
 
+- **[MySQL Connector/J](https://github.com/mysql/mysql-connector-j)** (`com.mysql:mysql-connector-j`)
+  - **License:** [GPLv2 with FOSS Exception](https://github.com/mysql/mysql-connector-j/blob/trunk/LICENSE)
+  - **Copyright:** © Oracle Corporation and/or its affiliates
+  - Official JDBC driver used for connecting to MySQL and MariaDB databases.
+
 ---
 
 ### Provided / Compile-Only Dependencies
