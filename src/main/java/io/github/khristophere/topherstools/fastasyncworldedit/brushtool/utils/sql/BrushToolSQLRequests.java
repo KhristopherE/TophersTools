@@ -1,6 +1,6 @@
 package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.sql;
 
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BrushToolManager;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTCacheManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolCommandLogic;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolModifier;
 import org.bukkit.inventory.ItemStack;
@@ -25,7 +25,7 @@ public class BrushToolSQLRequests {
      */
     public void updatePlayerName(UUID playerUUID, String playerName){
         brushToolSQL.updateUsernameSQL(playerUUID, playerName);
-        BrushToolManager.addPlayerToAllPlayersInMemory(playerName, playerUUID);
+        BTCacheManager.addPlayerToCache(playerName, playerUUID);
     }
 
     /**

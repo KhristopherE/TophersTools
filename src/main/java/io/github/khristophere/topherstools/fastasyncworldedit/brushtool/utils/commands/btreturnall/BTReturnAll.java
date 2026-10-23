@@ -1,8 +1,8 @@
 package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btreturnall;
 
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTCacheManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTLoadout;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BrushToolManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
 import io.github.khristophere.topherstools.globalutils.Utils;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
@@ -40,7 +40,7 @@ public class BTReturnAll {
             UUID uuid = player.getUniqueId();
             Scheduler.runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
-                List<String> allMaterialsInFileForUUID = BrushToolManager.allUUIDsToListMaterialsBound.get(player.getUniqueId());
+                List<String> allMaterialsInFileForUUID = BTCacheManager.getUUIDMaterialBindsInCache().get(player.getUniqueId());
                 if (allMaterialsInFileForUUID == null || allMaterialsInFileForUUID.isEmpty()) {
                     player.sendMessage(PlayerMessages.BrushTools_Not_On_File.getMessage());
                     return;
@@ -48,7 +48,7 @@ public class BTReturnAll {
                 boolean didAnyLoadoutApply = false;
                 List<BTLoadout> loadoutList = new ArrayList<>();
                 for (String materialInFile : allMaterialsInFileForUUID){
-                    BTLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(uuid, materialInFile);
+                    BTLoadout loadout = BTCacheManager.getBrushToolSQL().getBrushToolLoadoutSQL(uuid, materialInFile);
                     if (loadout != null && !loadout.isEmpty()){
                         Scheduler.runOnPrimaryThread(( () -> {
                             loadoutList.add(loadout);

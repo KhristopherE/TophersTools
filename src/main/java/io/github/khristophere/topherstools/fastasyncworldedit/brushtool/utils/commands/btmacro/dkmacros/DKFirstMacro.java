@@ -18,9 +18,9 @@ import com.sk89q.worldedit.session.SessionManager;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.item.ItemType;
 import io.github.khristophere.topherstools.TophersTools;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTCacheManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
 import io.github.khristophere.topherstools.globalutils.Utils;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BrushToolManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -59,13 +59,13 @@ public class DKFirstMacro {
         brushTool.setBrush(new CommandBrush(command, true), "worldedit.brush.command");
 
         brushTool.setSecondary(new BrushSettings());
-        BrushToolManager.brushToolSQL.brushToolSQLRequests.removeSecondaryBrushToolCommand(player.getUniqueId(), brushToolItem.getType().name());
+        BTCacheManager.getBrushToolSQL().brushToolSQLRequests.removeSecondaryBrushToolCommand(player.getUniqueId(), brushToolItem.getType().name());
 
         worldEditSession.setTool(itemType.getDefaultState(), brushTool);
 
         player.getInventory().setItem(inventorySlot, brushToolItem);
-        BrushToolManager.brushToolSQL.brushToolSQLRequests.saveBrushToolCommandSelfIdentifyOrdinal(player.getUniqueId(), brushToolItem, bindingCommand);
-        BrushToolManager.addToUUIDsToListMaterialsBoundInMemory(player.getUniqueId(), brushToolItem.getType().name());
+        BTCacheManager.getBrushToolSQL().brushToolSQLRequests.saveBrushToolCommandSelfIdentifyOrdinal(player.getUniqueId(), brushToolItem, bindingCommand);
+        BTCacheManager.addUUIDMaterialBindToCache(player.getUniqueId(), brushToolItem.getType().name());
         return true; // Returns true for successful run.
     }
 
@@ -146,17 +146,17 @@ public class DKFirstMacro {
         }
 
         brushTool.setSecondary(new BrushSettings());
-        BrushToolManager.brushToolSQL.brushToolSQLRequests.removeSecondaryBrushToolCommand(player.getUniqueId(), brushToolItem.getType().name());
+        BTCacheManager.getBrushToolSQL().brushToolSQLRequests.removeSecondaryBrushToolCommand(player.getUniqueId(), brushToolItem.getType().name());
 
         worldEditSession.setTool(itemType.getDefaultState(), brushTool);
 
         player.getInventory().setItem(inventorySlot, brushToolItem);
-        BrushToolManager.brushToolSQL.brushToolSQLRequests.saveBrushToolCommandSelfIdentifyOrdinal(
+        BTCacheManager.getBrushToolSQL().brushToolSQLRequests.saveBrushToolCommandSelfIdentifyOrdinal(
                 player.getUniqueId(),
                 brushToolItem,
                 bindingCommand
         );
-        BrushToolManager.addToUUIDsToListMaterialsBoundInMemory(player.getUniqueId(), brushToolItem.getType().name());
+        BTCacheManager.addUUIDMaterialBindToCache(player.getUniqueId(), brushToolItem.getType().name());
         return true; // Returns true for successful run.
     }
 
@@ -209,13 +209,13 @@ public class DKFirstMacro {
         brushTool.setSourceMask(new ExistingBlockMask(worldEditPlayer.getWorld()));
 
         brushTool.setSecondary(new BrushSettings());
-        BrushToolManager.brushToolSQL.brushToolSQLRequests.removeSecondaryBrushToolCommand(player.getUniqueId(), brushToolItem.getType().name());
+        BTCacheManager.getBrushToolSQL().brushToolSQLRequests.removeSecondaryBrushToolCommand(player.getUniqueId(), brushToolItem.getType().name());
 
         localSession.setTool(itemType.getDefaultState(), brushTool);
         player.getInventory().setItem(inventorySlot, brushToolItem);
 
-        BrushToolManager.brushToolSQL.brushToolSQLRequests.saveBrushToolCommandSelfIdentifyOrdinal(player.getUniqueId(), brushToolItem, bindingCommand);
-        BrushToolManager.addToUUIDsToListMaterialsBoundInMemory(player.getUniqueId(), brushToolItem.getType().name());
+        BTCacheManager.getBrushToolSQL().brushToolSQLRequests.saveBrushToolCommandSelfIdentifyOrdinal(player.getUniqueId(), brushToolItem, bindingCommand);
+        BTCacheManager.addUUIDMaterialBindToCache(player.getUniqueId(), brushToolItem.getType().name());
         return true; // Returns true for successful run.
     }
 

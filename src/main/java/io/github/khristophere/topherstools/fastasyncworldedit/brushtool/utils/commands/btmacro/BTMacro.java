@@ -1,9 +1,9 @@
 package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btmacro;
 
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTCacheManager;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTLoadoutMacro;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btmacro.dkmacros.DKFirstMacro;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BrushToolManager;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BrushToolLoadoutMacro;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
 import io.github.khristophere.topherstools.globalutils.Utils;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
@@ -54,14 +54,14 @@ public class BTMacro {
                 player.sendMessage(PlayerMessages.BrushTool_Max_Length.getMessage());
                 return;
             }
-            BrushToolLoadoutMacro brushToolLoadoutMacro = new BrushToolLoadoutMacro(finalMacroName);
-            if (brushToolLoadoutMacro.alreadyExists() && !override){
+            BTLoadoutMacro BTLoadoutMacro = new BTLoadoutMacro(finalMacroName);
+            if (BTLoadoutMacro.alreadyExists() && !override){
                 player.sendMessage(PlayerMessages.BrushTool_Macro_Already_Exists_Requesting_Override.getMessageMacroName(finalMacroName));
                 return;
             }
             player.sendMessage(PlayerMessages.BrushTool_Macro_Saved.getMessageMacroName(finalMacroName));
-            brushToolLoadoutMacro.saveToFile(player);
-            BrushToolManager.addBrushToolLoadoutMacroToMem(finalMacroName);
+            BTLoadoutMacro.saveToFile(player);
+            BTCacheManager.addBTLoadoutMacroToCache(finalMacroName);
             coolDownsSaves.placeCooldown(player);
         }
     }
@@ -86,17 +86,17 @@ public class BTMacro {
                 return;
             }
             Scheduler.runSequentialAsync( () -> {
-                BrushToolLoadoutMacro brushToolLoadoutMacro = new BrushToolLoadoutMacro(finalMacroName);
-                if (!brushToolLoadoutMacro.alreadyExists()){
+                BTLoadoutMacro BTLoadoutMacro = new BTLoadoutMacro(finalMacroName);
+                if (!BTLoadoutMacro.alreadyExists()){
                     player.sendMessage(PlayerMessages.BrushTool_Macro_Not_Exist.getMessageMacroName(finalMacroName));
                     return;
                 }
-                brushToolLoadoutMacro.loadFromFile();
-                if (brushToolLoadoutMacro.isBrushToolLoadoutsEmpty()){
+                BTLoadoutMacro.loadFromFile();
+                if (BTLoadoutMacro.isBrushToolLoadoutEmpty()){
                     player.sendMessage(PlayerMessages.Warning_BrushTool_Macro_Is_Empty.getMessageMacroName(finalMacroName));
                     return;
                 }
-                Scheduler.runOnPrimaryThread(( () -> brushToolLoadoutMacro.applyTo(player.getUniqueId())));
+                Scheduler.runOnPrimaryThread(( () -> BTLoadoutMacro.applyTo(player.getUniqueId())));
             });
             coolDownsLoads.placeCooldown(player);
         }
@@ -122,16 +122,16 @@ public class BTMacro {
                 return;
             }
             Scheduler.runSequentialAsync( () -> {
-                BrushToolLoadoutMacro brushToolLoadoutMacro = new BrushToolLoadoutMacro(finalMacroName);
-                if (!brushToolLoadoutMacro.alreadyExists()){
+                BTLoadoutMacro BTLoadoutMacro = new BTLoadoutMacro(finalMacroName);
+                if (!BTLoadoutMacro.alreadyExists()){
                     player.sendMessage(PlayerMessages.BrushTool_Macro_Not_Exist.getMessageMacroName(finalMacroName));
                 } else {
                     if (confirmation != null && confirmation.equalsIgnoreCase("Confirm")){
                         if (pendingDeletions.containsKey(player.getUniqueId()) && pendingDeletions.get(player.getUniqueId()).macroName.equals(finalMacroName)){
                             if (!pendingDeletions.get(player.getUniqueId()).isExpired()){
-                                if (brushToolLoadoutMacro.deleteBrushToolLoadoutMacro()){
+                                if (BTLoadoutMacro.deleteBrushToolLoadoutMacro()){
                                     player.sendMessage(PlayerMessages.BrushTool_Macro_Deleted.getMessageMacroName(finalMacroName));
-                                    BrushToolManager.removeBrushToolLoadoutMacroFromMem(finalMacroName);
+                                    BTCacheManager.removeBTLoadoutMacroFromCache(finalMacroName);
                                     pendingDeletions.remove(player.getUniqueId());
                                     coolDownsDeletes.placeCooldown(player);
                                 } else {
@@ -191,7 +191,7 @@ public class BTMacro {
      */
     @Suggestions("suggestedMacros")
     public List<String> getSuggestedBrushToolMacros(CommandContext<Source> context, String input) {
-        return BrushToolManager.brushToolLoadoutMacrosAvailable;
+        return BTCacheManager.getBTLoadoutMacrosInCache();
     }
 
     public static String sanitizeInput(String input){

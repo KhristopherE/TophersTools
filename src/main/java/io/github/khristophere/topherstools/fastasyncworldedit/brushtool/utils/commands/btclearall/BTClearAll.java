@@ -4,8 +4,8 @@ import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.blocks.BaseItem;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTCacheManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BrushToolManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
 import io.github.khristophere.topherstools.globalutils.Utils;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
@@ -17,7 +17,6 @@ import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
 import org.incendo.cloud.paper.util.sender.Source;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,7 +42,7 @@ public class BTClearAll {
             UUID uuid = player.getUniqueId();
             Scheduler.runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
-                List<String> allMaterialsInFileForUUID = BrushToolManager.allUUIDsToListMaterialsBound.get(player.getUniqueId());
+                List<String> allMaterialsInFileForUUID = BTCacheManager.getUUIDMaterialBindsInCache().get(player.getUniqueId());
                 Scheduler.runOnPrimaryThread(( () -> {
                     Player playerMainThread = Bukkit.getPlayer(uuid);
                     if (playerMainThread == null || !playerMainThread.isOnline()) return;
@@ -54,14 +53,14 @@ public class BTClearAll {
                     com.sk89q.worldedit.entity.Player worldEditPlayer = BukkitAdapter.adapt(playerMainThread);
                     LocalSession worldEditSession = WorldEdit.getInstance().getSessionManager().get(worldEditPlayer);
                     for (String materialInFile : allMaterialsInFileForUUID){
-                        BrushToolManager.brushToolSQL.deleteBrushToolLoadoutSQL(uuid, materialInFile);
+                        BTCacheManager.getBrushToolSQL().deleteBrushToolLoadoutSQL(uuid, materialInFile);
                         Material mat = Material.matchMaterial(materialInFile);
                         if (mat != null) {
                             BaseItem baseItem = BukkitAdapter.adapt(new ItemStack(mat));
                             worldEditSession.setTool(baseItem, null);
                         }
                     }
-                    BrushToolManager.allUUIDsToListMaterialsBound.put(player.getUniqueId(), new ArrayList<>());
+                    BTCacheManager.emptyUUIDMaterialBindsInCache(player.getUniqueId());
                     player.sendMessage(PlayerMessages.BrushTools_Cleared.getMessage());
                 }));
                 coolDowns.placeCooldown(player);

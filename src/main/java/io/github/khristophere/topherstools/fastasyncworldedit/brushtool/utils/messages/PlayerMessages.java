@@ -53,6 +53,8 @@ public enum PlayerMessages {
             "&8[&cWARNING&8] &7Macro &b%macroName% &7is &cempty&7."),
     BrushTool_Macro_Applied(
             "&7Your &6brush/tool &7macro &b%macroName% &7has been &aapplied&7."),
+    BrushTool_Macro_Applied_With_Failures_Missing_Material(
+            "&7Your &6brush/tool &7macro &b%macroName% &7has been &aapplied&7, with &c%integer% failures &7at inventory slot(s) &e%inventorySlots%&7."),
     BrushTool_Macro_Deleted(
             "&7The &6brush/tool &7macro &b%macroName% &7has been &cdeleted&7."),
     BrushTool_Macro_Deletion_Failed(
@@ -104,6 +106,15 @@ public enum PlayerMessages {
      */
     public TextComponent getMessageMacroName(String macroName){
         return colorCode(message.replaceAll("%macroName%", macroName));
+    }
+
+    /**
+     * If the requested PlayerMessage has %macroName% this will replace those strings with the provided string.
+     * @param macroName The Macro Name to replace %macroName%.
+     * @return This PlayerMessage's message replacing the %value%'s with the provided String.
+     */
+    public TextComponent getMessageMacroNameFailuresInventorySlots(String macroName, int failures, String inventorySlots){
+        return colorCode(message.replaceAll("%macroName%", macroName).replaceAll("%integer%", String.valueOf(failures).replaceAll("%inventorySlots%", inventorySlots)));
     }
 
     /**

@@ -7,8 +7,8 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.command.tool.Tool;
 import com.sk89q.worldedit.event.platform.CommandEvent;
 import com.sk89q.worldedit.world.item.ItemType;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTCacheManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTLoadout;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BrushToolManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolCommandLogic;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
@@ -63,15 +63,15 @@ public class brushToolBinding {
          */
         if (hadPreviousTool && isSecondaryBinding && newToolStringReference.isEmpty()) {
             Scheduler.runSequentialAsync( () -> {
-                BTLoadout oldLoadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(player.getUniqueId(), minecraftItemInHand.getType().name());
+                BTLoadout oldLoadout = BTCacheManager.getBrushToolSQL().getBrushToolLoadoutSQL(player.getUniqueId(), minecraftItemInHand.getType().name());
                 if (oldLoadout != null && !oldLoadout.isEmpty()) {
                     player.sendMessage(oldLoadout.getLoadoutPromptMessage());
                     player.sendMessage(PlayerMessages.getBuggedStateSecondaryBrushInvalidMessage());
                 }
-                BrushToolManager.brushToolSQL.deleteBrushToolLoadoutSQL(player.getUniqueId(), minecraftItemInHand.getType().name());
+                BTCacheManager.getBrushToolSQL().deleteBrushToolLoadoutSQL(player.getUniqueId(), minecraftItemInHand.getType().name());
             });
-            BrushToolManager.brushToolSQL.brushToolSQLRequests.deleteBrushTool(player.getUniqueId(), minecraftItemInHand.getType().name());
-            BrushToolManager.removeFromUUIDsToListMaterialsBoundInMemory(player.getUniqueId(), minecraftItemInHand.getType().name());
+            BTCacheManager.getBrushToolSQL().brushToolSQLRequests.deleteBrushTool(player.getUniqueId(), minecraftItemInHand.getType().name());
+            BTCacheManager.removeUUIDMaterialBindFromCache(player.getUniqueId(), minecraftItemInHand.getType().name());
             return;
         }
 
@@ -80,13 +80,13 @@ public class brushToolBinding {
          * specify primary OR secondary. To comply with the functionality of FAWE, we will also delete the secondary functionality from the save file.
          */
         if (!isPrimaryBinding && !isSecondaryBinding && wasBindingSuccessful){
-            BrushToolManager.brushToolSQL.brushToolSQLRequests.removeSecondaryBrushToolCommand(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
+            BTCacheManager.getBrushToolSQL().brushToolSQLRequests.removeSecondaryBrushToolCommand(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
         }
 
         if (wasBindingSuccessful) {
-            BrushToolManager.brushToolSQL.brushToolSQLRequests.deleteAllBrushToolModifiers(player.getUniqueId(), minecraftItemInHand.getType().name());
-            BrushToolManager.brushToolSQL.brushToolSQLRequests.saveBrushToolCommandSelfIdentifyOrdinal(player.getUniqueId(), minecraftItemInHand, command);
-            BrushToolManager.addToUUIDsToListMaterialsBoundInMemory(player.getUniqueId(), minecraftItemInHand.getType().name());
+            BTCacheManager.getBrushToolSQL().brushToolSQLRequests.deleteAllBrushToolModifiers(player.getUniqueId(), minecraftItemInHand.getType().name());
+            BTCacheManager.getBrushToolSQL().brushToolSQLRequests.saveBrushToolCommandSelfIdentifyOrdinal(player.getUniqueId(), minecraftItemInHand, command);
+            BTCacheManager.addUUIDMaterialBindToCache(player.getUniqueId(), minecraftItemInHand.getType().name());
         }
     }
 

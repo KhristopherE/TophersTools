@@ -2,7 +2,7 @@ package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.c
 
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTLoadout;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BrushToolManager;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTCacheManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
 import io.github.khristophere.topherstools.globalutils.Utils;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
@@ -39,7 +39,7 @@ public class BTShout {
         if (sender.source() instanceof Player player) {
             Scheduler.runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
-                BTLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
+                BTLoadout loadout = BTCacheManager.getBrushToolSQL().getBrushToolLoadoutSQL(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
                 if (loadout != null && !loadout.isEmpty()) {
                     player.sendMessage(PlayerMessages.BrushTool_Info_Below_Self.getMessage());
                     player.sendMessage(loadout.getLoadoutPromptMessage());

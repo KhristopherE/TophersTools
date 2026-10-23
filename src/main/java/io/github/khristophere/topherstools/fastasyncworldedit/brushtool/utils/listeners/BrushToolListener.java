@@ -1,8 +1,8 @@
 package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners;
 
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTCacheManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
 import io.github.khristophere.topherstools.TophersTools;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BrushToolManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.arguments.brushToolBinding;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.arguments.brushToolModify;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.arguments.brushToolUnbind;
@@ -17,15 +17,15 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class BrushToolListener implements Listener {
 
-    public static BrushToolManager brushToolManager;
+    public static BTCacheManager BTCacheManager;
 
     /**
      * Instantiates the entirety of the BrushToolListener functionalities.
      */
     @SuppressWarnings("InstantiationOfUtilityClass")
     public BrushToolListener(){
-        //Instantiates the BrushToolManager, and makes it public static accessible.
-        brushToolManager = new BrushToolManager();
+        //Instantiates the BTCacheManager, and makes it public static accessible.
+        BTCacheManager = new BTCacheManager();
         //Registers this class with the server as a listener. See above, "implements Listener".
         TophersTools.getInstance().getServer().getPluginManager().registerEvents(this, TophersTools.getInstance());
 
@@ -68,7 +68,7 @@ public class BrushToolListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     private void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        BrushToolManager.brushToolSQL.brushToolSQLRequests.updatePlayerName(player.getUniqueId(), player.getName());
+        io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTCacheManager.getBrushToolSQL().brushToolSQLRequests.updatePlayerName(player.getUniqueId(), player.getName());
     }
 
     /**

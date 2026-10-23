@@ -3,7 +3,7 @@ package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.l
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.event.platform.CommandEvent;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BrushToolManager;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTCacheManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolCommandLogic;
 import org.bukkit.entity.Player;
 
@@ -23,8 +23,8 @@ public class brushToolUnbind {
                         new CommandEvent(BukkitAdapter.adapt(player), BrushToolCommandLogic.cleanCommand(command)));
 
         // Deletes the Brush/Tool from the YML File.
-        BrushToolManager.brushToolSQL.brushToolSQLRequests.deleteBrushTool(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
-        BrushToolManager.removeFromUUIDsToListMaterialsBoundInMemory(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
+        BTCacheManager.getBrushToolSQL().brushToolSQLRequests.deleteBrushTool(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
+        BTCacheManager.removeUUIDMaterialBindFromCache(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
     }
 
 }

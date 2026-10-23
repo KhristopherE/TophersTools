@@ -2,7 +2,7 @@ package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.c
 
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTLoadout;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BrushToolManager;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTCacheManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
 import io.github.khristophere.topherstools.globalutils.Utils;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
@@ -43,7 +43,7 @@ public class BTGet {
         if (sender.source() instanceof Player player) {
             Scheduler.runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
-                BTLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
+                BTLoadout loadout = BTCacheManager.getBrushToolSQL().getBrushToolLoadoutSQL(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
                 if (loadout != null && !loadout.isEmpty()) {
                     player.sendMessage(PlayerMessages.BrushTool_Info_Below_Self.getMessage());
                     player.sendMessage(loadout.getLoadoutPromptMessage());
@@ -74,7 +74,7 @@ public class BTGet {
                 if (onlinePlayer == null) {
                     player.sendMessage(PlayerMessages.BrushTool_Info_Inquiry_Player_Offline_Requesting_Specify_Material.getMessage());
                 } else {
-                    BTLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(onlinePlayer.getUniqueId(), onlinePlayer.getInventory().getItemInMainHand().getType().name());
+                    BTLoadout loadout = BTCacheManager.getBrushToolSQL().getBrushToolLoadoutSQL(onlinePlayer.getUniqueId(), onlinePlayer.getInventory().getItemInMainHand().getType().name());
                     if (loadout != null && !loadout.isEmpty()) {
                         player.sendMessage(PlayerMessages.BrushTool_Info_Below_Specified_Player.getMessage(onlinePlayer.getName()));
                         player.sendMessage(loadout.getLoadoutPromptMessage());
@@ -103,8 +103,8 @@ public class BTGet {
         if (sender.source() instanceof Player player) {
             Scheduler.runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
-                UUID requestedPlayerUUID = BrushToolManager.allPlayersInSQL.get(requestedPlayer);
-                BTLoadout loadout = BrushToolManager.brushToolSQL.getBrushToolLoadoutSQL(requestedPlayerUUID, requestedMaterial.toUpperCase());
+                UUID requestedPlayerUUID = BTCacheManager.getUsernameUUIDMapInCache().get(requestedPlayer);
+                BTLoadout loadout = BTCacheManager.getBrushToolSQL().getBrushToolLoadoutSQL(requestedPlayerUUID, requestedMaterial.toUpperCase());
                 if (loadout != null && !loadout.isEmpty()) {
                     player.sendMessage(PlayerMessages.BrushTool_Info_Below_Specified_Player_Specified_Material.getMessage(requestedPlayer, requestedMaterial));
                     player.sendMessage(loadout.getLoadoutPromptMessage());
@@ -122,7 +122,7 @@ public class BTGet {
      */
     @Suggestions("suggestedPlayers")
     public List<String> getSuggestedPlayers(CommandContext<Source> context, String input) {
-        return BrushToolManager.allPlayersInSQL.keySet().stream().toList();
+        return BTCacheManager.getUsernameUUIDMapInCache().keySet().stream().toList();
     }
 
     /**
@@ -133,9 +133,9 @@ public class BTGet {
     public List<String> getSuggestedMaterials(CommandContext<CommandSender> context, String input) {
         String requestedPlayer = context.getOrDefault("player", null);
         if (requestedPlayer == null || requestedPlayer.isEmpty()) return Collections.emptyList();
-        UUID targetUuid = BrushToolManager.allPlayersInSQL.get(requestedPlayer);
+        UUID targetUuid = BTCacheManager.getUsernameUUIDMapInCache().get(requestedPlayer);
         if (targetUuid == null) return Collections.emptyList();
-        List<String> targetMaterials = BrushToolManager.allUUIDsToListMaterialsBound.get(targetUuid);
+        List<String> targetMaterials = BTCacheManager.getUUIDMaterialBindsInCache().get(targetUuid);
         return targetMaterials != null ? targetMaterials : Collections.emptyList();
     }
 

@@ -30,16 +30,16 @@ public class BTLoadout {
     private final @Nullable ItemStack itemStack;
 
     /**
-     * Constructs a new {@code BTLoadout} with the specified material, item stack,
+     * Constructs a new {@code BTLoadout} (brush/tool loadout) with the specified material, item stack,
      * commands, and modifier list.
      *
      * @param material         the material associated with the loadout, or null
      * @param itemStack        the optional custom item stack, or null
-     * @param primaryCommand   the primary brush command, or null
-     * @param secondaryCommand the secondary brush command, or null
+     * @param primaryCommand   the primary brush/tool command, or null
+     * @param secondaryCommand the secondary brush/tool command, or null
      * @param modifiers        the list of modifier commands to apply
      */
-    public BTLoadout(String material, @Nullable ItemStack itemStack, String primaryCommand, String secondaryCommand, @Nullable List<String> modifiers) {
+    public BTLoadout(@Nullable String material, @Nullable ItemStack itemStack, @Nullable String primaryCommand, @Nullable String secondaryCommand, @Nullable List<String> modifiers) {
         this.material = Objects.requireNonNullElse(material, NA);
         this.itemStack = itemStack != null ? itemStack.clone() : null;
         this.primaryCommand = Objects.requireNonNullElse(primaryCommand, NA);
@@ -84,7 +84,7 @@ public class BTLoadout {
     }
 
     /**
-     * Checks whether this brush loadout is considered empty
+     * Checks whether this brush/tool loadout is considered empty
      * (i.e., no primary/secondary commands and no modifiers).
      *
      * @return true if empty, false otherwise
@@ -113,7 +113,7 @@ public class BTLoadout {
     }
 
     /**
-     * Applies this brush tool loadout's bindings to the player with the specified UUID,
+     * Applies this brush/tool loadout's bindings to the player with the specified UUID,
      * provided they are currently online.
      *
      * @param uuid the target player's UUID
@@ -126,7 +126,7 @@ public class BTLoadout {
     }
 
     /**
-     * Applies this brush tool loadout with the custom item to the player with the specified UUID,
+     * Applies this brush/tool loadout with the custom item to the player with the specified UUID,
      * provided they are online. Temporarily handles the player's currently held item.
      *
      * @param uuid                     the target player's UUID
@@ -155,12 +155,12 @@ public class BTLoadout {
      * @param player the target player
      * @param slot   the inventory slot index
      */
-    public void applyToSpecifiedSlot(Player player, int slot) {
-        if (NA.equals(material)) return;
+    public boolean applyToSpecifiedSlot(Player player, int slot) {
+        if (NA.equals(material)) return false;
         ItemStack localStack = itemStack != null ? itemStack.clone() : null;
         if (localStack == null) {
             Material localMaterial = Material.matchMaterial(material);
-            if (localMaterial == null) return;
+            if (localMaterial == null) return false;
             localStack = new ItemStack(localMaterial);
         }
         player.getInventory().setHeldItemSlot(0);
@@ -171,6 +171,7 @@ public class BTLoadout {
             player.getInventory().setItem(slot, movedItem);
             player.getInventory().setItem(0, null);
         }
+        return true;
     }
 
     /**
