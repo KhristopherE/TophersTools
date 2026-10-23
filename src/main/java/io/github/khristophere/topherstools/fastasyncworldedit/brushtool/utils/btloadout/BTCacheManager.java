@@ -54,7 +54,7 @@ public class BTCacheManager {
      *
      * @return a list of macro names
      */
-    public static List<String> getBTLoadoutMacrosInCache() {
+    public static List<String> getBTLoadoutMacroNamesInCache() {
         return Collections.unmodifiableList(AVAILABLE_MACROS);
     }
 
@@ -114,7 +114,7 @@ public class BTCacheManager {
      *
      * @param macroName the name of the macro
      */
-    public static void removeBTLoadoutMacroFromCache(String macroName) {
+    public static void removeBTLoadoutMacroNameFromCache(String macroName) {
         AVAILABLE_MACROS.remove(macroName);
     }
 
@@ -147,6 +147,49 @@ public class BTCacheManager {
             materialsBound.remove(material);
             return materialsBound.isEmpty() ? null : materialsBound;
         });
+    }
+
+    private static final int MAX_CACHED_MACROS = 5;
+    // Thread-safe LinkedHashMap configured as an LRU (Least Recently Used) cache (accessOrder = true)
+    private static final Map<String, BTLoadoutMacro> MACRO_CACHE = Collections.synchronizedMap(
+            new LinkedHashMap<String, BTLoadoutMacro>(MAX_CACHED_MACROS, 0.75f, true) {
+                @Override
+                protected boolean removeEldestEntry(Map.Entry<String, BTLoadoutMacro> eldest) {
+                    return size() > MAX_CACHED_MACROS;
+                }
+            }
+    );
+
+    /**
+     * Retrieves a macro by name, utilizing a 5-item LRU (Least Recently Used) memory cache.
+     * If the macro is already cached, it is marked as most recently used.
+     * If not, it is loaded from disk and added to the cache.
+     * If the macro already exists on disk, it will be loaded from the file ready for use.
+     *
+     * @param macroName the name of the macro
+     * @return the {@link BTLoadoutMacro} instance, or null if it doesn't exist on disk
+     */
+    public static BTLoadoutMacro getBTLoadoutMacroFromCacheOrFile(String macroName) {
+        if (macroName == null) return null;
+        BTLoadoutMacro cachedMacro = MACRO_CACHE.get(macroName);
+        if (cachedMacro != null)
+            return cachedMacro;
+        BTLoadoutMacro newMacro = new BTLoadoutMacro(macroName);
+        if (newMacro.alreadyExists()) {
+            newMacro.loadFromFile();
+            MACRO_CACHE.put(macroName, newMacro);
+            return newMacro;
+        }
+        return newMacro;
+    }
+
+    /**
+     * Removes the specified brush tool loadout macro from the in-memory LRU cache.
+     *
+     * @param macroName the name of the macro to remove from cache
+     */
+    public static void removeBTLoadoutMacroFromCache(String macroName) {
+        if (macroName != null) MACRO_CACHE.remove(macroName);
     }
 
     /**

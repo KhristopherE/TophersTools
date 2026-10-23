@@ -54,7 +54,7 @@ public class BTMacro {
                 player.sendMessage(PlayerMessages.BrushTool_Max_Length.getMessage());
                 return;
             }
-            BTLoadoutMacro BTLoadoutMacro = new BTLoadoutMacro(finalMacroName);
+            BTLoadoutMacro BTLoadoutMacro = BTCacheManager.getBTLoadoutMacroFromCacheOrFile(finalMacroName);
             if (BTLoadoutMacro.alreadyExists() && !override){
                 player.sendMessage(PlayerMessages.BrushTool_Macro_Already_Exists_Requesting_Override.getMessageMacroName(finalMacroName));
                 return;
@@ -86,12 +86,13 @@ public class BTMacro {
                 return;
             }
             Scheduler.runSequentialAsync( () -> {
-                BTLoadoutMacro BTLoadoutMacro = new BTLoadoutMacro(finalMacroName);
+                BTLoadoutMacro BTLoadoutMacro = BTCacheManager.getBTLoadoutMacroFromCacheOrFile(finalMacroName);
                 if (!BTLoadoutMacro.alreadyExists()){
                     player.sendMessage(PlayerMessages.BrushTool_Macro_Not_Exist.getMessageMacroName(finalMacroName));
                     return;
                 }
-                BTLoadoutMacro.loadFromFile();
+                if (!BTLoadoutMacro.alreadyLoadedFromFile())
+                    BTLoadoutMacro.loadFromFile();
                 if (BTLoadoutMacro.isBrushToolLoadoutEmpty()){
                     player.sendMessage(PlayerMessages.Warning_BrushTool_Macro_Is_Empty.getMessageMacroName(finalMacroName));
                     return;
@@ -122,7 +123,7 @@ public class BTMacro {
                 return;
             }
             Scheduler.runSequentialAsync( () -> {
-                BTLoadoutMacro BTLoadoutMacro = new BTLoadoutMacro(finalMacroName);
+                BTLoadoutMacro BTLoadoutMacro = BTCacheManager.getBTLoadoutMacroFromCacheOrFile(finalMacroName);
                 if (!BTLoadoutMacro.alreadyExists()){
                     player.sendMessage(PlayerMessages.BrushTool_Macro_Not_Exist.getMessageMacroName(finalMacroName));
                 } else {
@@ -131,6 +132,7 @@ public class BTMacro {
                             if (!pendingDeletions.get(player.getUniqueId()).isExpired()){
                                 if (BTLoadoutMacro.deleteBrushToolLoadoutMacro()){
                                     player.sendMessage(PlayerMessages.BrushTool_Macro_Deleted.getMessageMacroName(finalMacroName));
+                                    BTCacheManager.removeBTLoadoutMacroNameFromCache(finalMacroName);
                                     BTCacheManager.removeBTLoadoutMacroFromCache(finalMacroName);
                                     pendingDeletions.remove(player.getUniqueId());
                                     coolDownsDeletes.placeCooldown(player);
@@ -191,7 +193,7 @@ public class BTMacro {
      */
     @Suggestions("suggestedMacros")
     public List<String> getSuggestedBrushToolMacros(CommandContext<Source> context, String input) {
-        return BTCacheManager.getBTLoadoutMacrosInCache();
+        return BTCacheManager.getBTLoadoutMacroNamesInCache();
     }
 
     public static String sanitizeInput(String input){

@@ -22,6 +22,7 @@ public class BTLoadoutMacro {
     private final YMLHandler yml;
     private final Map<Integer, BTLoadout> brushToolLoadoutMap = new HashMap<>();
     private final String macroName;
+    private boolean loadedFromFile = false;
 
     /**
      * Constructs a new {@code BTLoadoutMacro} (brush/tool loadout macro) for the specified macro file name.
@@ -74,6 +75,7 @@ public class BTLoadoutMacro {
             }
             yml.saveConfig();
         });
+        loadedFromFile = false;
     }
 
     /**
@@ -88,6 +90,17 @@ public class BTLoadoutMacro {
                 brushToolLoadoutMap.put(i, getLoadout(i));
             }
         }
+        loadedFromFile = true;
+    }
+
+    /**
+     * Checks whether this macro has already been loaded from the configuration file.
+     * Upon new saveToFile call this will change to false.
+     *
+     * @return true if already loaded from file, false otherwise
+     */
+    public boolean alreadyLoadedFromFile() {
+        return loadedFromFile;
     }
 
     /**
