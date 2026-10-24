@@ -1,15 +1,15 @@
 package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.config;
 
-import io.github.khristophere.topherstools.data.management.yml.YMLHandler;
+import io.github.khristophere.topherstools.data.management.yml.YMLManager;
 
 import java.util.List;
 import java.util.Optional;
 
 public class Config {
 
-    public static YMLHandler configYML;
+    public static YMLManager configYML;
     public Config(){
-        configYML = new YMLHandler("FAWE-BT-Utils", "config", true);
+        configYML = new YMLManager("FAWE-BT-Utils", "config", true);
         checkIfNeedsDefaults();
         gatherDetails();
     }

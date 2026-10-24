@@ -1,84 +1,143 @@
 package io.github.khristophere.topherstools.data.management.sql;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import io.github.khristophere.topherstools.TophersTools;
 
-import java.io.File;
+import javax.annotation.Nullable;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * Manages database connections and initialization, supporting both local SQLite
+ * file databases and remote MySQL/MariaDB database servers.
+ */
 public class SQLManager {
 
-    private final String connectionURL;
     private final String filePath;
     private final String databaseName;
-    private String username = "";
-    private String password = "";
-    private boolean isRemote = false;
+    private final boolean isRemote;
+    private final HikariDataSource dataSource;
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
+    /**
+     * Constructs a local SQLite database manager with a HikariCP connection pool.
+     * automatically creating necessary parent directories, the database file,
+     * and enabling Write-Ahead Logging (WAL).
+     *
+     * @param filePath     the relative folder path within the plugin's data folder
+     * @param databaseName the name of the SQLite database file (e.g., "PlayerBindings")
+     */
     public SQLManager(String filePath, String databaseName) {
-        //If the file name does NOT end with ".db" add ".db" to the end.
         this.databaseName = databaseName.toLowerCase().endsWith(".db") ? databaseName : databaseName + ".db";
 
-        //Replaces all "\" with "/" as "\" don't work on Linux & Mac
-        //Replaces all leading & trailing "/" with nothing.
-        filePath = filePath
-                .replace('\\', '/')
-                .replaceAll("^/+|/+$", "");
+        String normalizedPath = filePath.replace('\\', '/').replaceAll("^/+|/+$", "");
+        Path pluginFolder = TophersTools.getInstance().getDataFolder().toPath();
+        Path resolvedPath = normalizedPath.isEmpty() ? pluginFolder : pluginFolder.resolve(normalizedPath);
 
-        //If the path is empty no changes are made, if the path contains anything 'prepend' a "/"
-        filePath = filePath.isEmpty() ? "" : "/" + filePath;
-        this.filePath = TophersTools.getInstance().getDataFolder().getAbsolutePath() + filePath;
+        this.filePath = resolvedPath.toAbsolutePath().toString();
 
-        File parentFolder = new File((this.filePath));
-        parentFolder.mkdirs();
-        File dbFile = new File(this.filePath, this.databaseName);
-        if (!dbFile.exists()) {
-            try {
-                dbFile.createNewFile();
-            } catch (IOException e) {
-                TophersTools.getInstance().getLogger().severe("Could not create Database / DB file " + this.databaseName + " at " + dbFile.getPath());
+        try {
+            Files.createDirectories(resolvedPath);
+            Path dbFilePath = resolvedPath.resolve(this.databaseName);
+            if (Files.notExists(dbFilePath)) {
+                Files.createFile(dbFilePath);
             }
+
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl("jdbc:sqlite:" + dbFilePath.toAbsolutePath());
+            config.setMaximumPoolSize(10);
+            config.setPoolName("TophersTools-SQLite-"+databaseName+"-Pool");
+
+            this.dataSource = new HikariDataSource(config);
+            this.isRemote = false;
+        } catch (IOException e) {
+            TophersTools.getInstance().getSLF4JLogger().error("Could not create SQLite database file {} at {}", this.databaseName, resolvedPath, e);
+            throw new RuntimeException("Failed to initialize SQLite database: " + this.databaseName, e);
         }
-        this.connectionURL = "jdbc:sqlite:" +  dbFile;
+
         enableWAL();
     }
 
-    public SQLManager(String host, int port, String databaseName, String username, String password, boolean useSSL) {
+    /**
+     * Constructs a remote MySQL/MariaDB database manager with a HikariCP connection pool.
+     *
+     * @param host         the database server host address
+     * @param port         the database server port
+     * @param databaseName the name of the remote database schema
+     * @param username     the authentication username
+     * @param password     the authentication password
+     * @param useSSL       whether to use SSL encryption for the connection
+     */
+    public SQLManager(String host, int port, String databaseName, @Nullable String username, @Nullable String password, boolean useSSL) {
         this.filePath = "";
-        this.databaseName = "";
-        this.isRemote = true;
-        this.username = username;
-        this.password = password;
-        this.connectionURL = String.format(
+        this.databaseName = databaseName;
+
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(String.format(
                 "jdbc:mysql://%s:%d/%s?useSSL=%b&autoReconnect=true&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true",
                 host, port, databaseName, useSSL
-        );
+        ));
+        config.setUsername(username != null ? username : "");
+        config.setPassword(password != null ? password : "");
+        config.setMaximumPoolSize(10);
+        config.setPoolName("TophersTools-MySQL-"+databaseName+"-Pool");
+
+        this.dataSource = new HikariDataSource(config);
+        this.isRemote = true;
     }
 
+    /**
+     * Borrows an active connection from the HikariCP connection pool.
+     *
+     * @return a database {@link Connection}
+     * @throws SQLException if a connection cannot be obtained
+     */
     public Connection getConnection() throws SQLException {
-        if (isRemote) {
-            return java.sql.DriverManager.getConnection(connectionURL, username, password);
-        } else {
-            return java.sql.DriverManager.getConnection(connectionURL);
-        }
+        return dataSource.getConnection();
     }
 
-    private void enableWAL(){
-        try (Statement statement = getConnection().createStatement()) {
-            statement.execute("PRAGMA journal_mode=WAL;");
+
+    /**
+     * Enables Write-Ahead Logging (WAL) for SQLite.
+     */
+    private void enableWAL() {
+        if (isRemote) return;
+        try (Connection c = getConnection();
+             Statement s = c.createStatement()) {
+            s.execute("PRAGMA journal_mode=WAL;");
         } catch (SQLException e) {
-            TophersTools.getInstance().getSLF4JLogger().error("Failed to set Database Journal Mode to WAL", e);
+            TophersTools.getInstance().getSLF4JLogger().error("Failed to set SQLite database Journal Mode to WAL", e);
         }
     }
 
-    public String getFilePath(){
+    /**
+     * Gracefully shuts down the connection pool when the plugin disables.
+     */
+    public void closeConnectionPool() {
+        if (dataSource != null && !dataSource.isClosed()) {
+            dataSource.close();
+        }
+    }
+
+    /**
+     * Gets the absolute file path where the database is stored, if the database is local.
+     *
+     * @return the absolute file path string
+     */
+    public String getFilePath() {
         return filePath;
     }
 
-    public String getDatabaseName(){
+    /**
+     * Gets the name of the database file or remote schema.
+     *
+     * @return the database name string
+     */
+    public String getDatabaseName() {
         return databaseName;
     }
 

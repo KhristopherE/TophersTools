@@ -1,6 +1,6 @@
 package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout;
 
-import io.github.khristophere.topherstools.data.management.yml.YMLHandler;
+import io.github.khristophere.topherstools.data.management.yml.YMLManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btmacro.dkmacros.DKFirstMacro;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolCommandLogic;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolModifier;
@@ -19,7 +19,7 @@ import java.util.*;
  */
 public class BTLoadoutMacro {
 
-    private final YMLHandler yml;
+    private final YMLManager yml;
     private final Map<Integer, BTLoadout> brushToolLoadoutMap = new HashMap<>();
     private final String macroName;
     private boolean loadedFromFile = false;
@@ -30,7 +30,7 @@ public class BTLoadoutMacro {
      * @param fileName the name of the macro file
      */
     public BTLoadoutMacro(String fileName) {
-        this.yml = new YMLHandler("FAWE-BT-Utils/Macros", fileName, false);
+        this.yml = new YMLManager("FAWE-BT-Utils/Macros", fileName, false);
         this.macroName = fileName;
     }
 
@@ -40,7 +40,7 @@ public class BTLoadoutMacro {
      * @return true if the file exists, false otherwise
      */
     public boolean alreadyExists() {
-        return yml.doesFileAlreadyExist();
+        return yml.fileExists();
     }
 
     /**
@@ -118,7 +118,7 @@ public class BTLoadoutMacro {
      * @return true if successfully deleted, false otherwise
      */
     public boolean deleteBrushToolLoadoutMacro() {
-        return yml.attemptFileDeletion();
+        return yml.deleteFile();
     }
 
     /**
