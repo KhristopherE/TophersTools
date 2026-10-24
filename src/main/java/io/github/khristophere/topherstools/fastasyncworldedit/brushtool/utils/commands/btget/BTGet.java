@@ -117,26 +117,42 @@ public class BTGet {
     }
 
     /**
-     * Provides a list of suggested player names for a command.
-     * @return A matching list of online and offline player names.
+     * Provides a filtered and limited list of suggested player names.
+     *
+     * @param context The command context.
+     * @param input   The current string the user has typed so far.
+     * @return A filtered, capped list of matching usernames.
      */
     @Suggestions("suggestedPlayers")
     public List<String> getSuggestedPlayers(CommandContext<Source> context, String input) {
-        return BTCacheManager.getUsernameUUIDMapInCache().keySet().stream().toList();
+        return BTCacheManager.getUsernameUUIDMapInCache().keySet().stream()
+                .filter(name -> name.toLowerCase().startsWith(input.toLowerCase()))
+                .limit(25)
+                .toList();
     }
 
     /**
-     * Provides a list of suggested materials for a command.
-     * @return A matching list of materials that are both, items & not blocks.
+     * Provides a filtered and limited list of suggested materials for a target player.
+     *
+     * @param context The command context.
+     * @param input   The current string the user has typed so far.
+     * @return A filtered, capped list of matching materials.
      */
     @Suggestions("suggestedMaterials")
     public List<String> getSuggestedMaterials(CommandContext<CommandSender> context, String input) {
         String requestedPlayer = context.getOrDefault("player", null);
-        if (requestedPlayer == null || requestedPlayer.isEmpty()) return Collections.emptyList();
-        UUID targetUuid = BTCacheManager.getUsernameUUIDMapInCache().get(requestedPlayer);
-        if (targetUuid == null) return Collections.emptyList();
-        List<String> targetMaterials = BTCacheManager.getUUIDMaterialBindsInCache().get(targetUuid);
-        return targetMaterials != null ? targetMaterials : Collections.emptyList();
+        if (requestedPlayer == null || requestedPlayer.isEmpty())
+            return Collections.emptyList();
+        UUID targetUUID = BTCacheManager.getUsernameUUIDMapInCache().get(requestedPlayer);
+        if (targetUUID == null)
+            return Collections.emptyList();
+        List<String> targetMaterials = BTCacheManager.getUUIDMaterialBindsInCache().get(targetUUID);
+        if (targetMaterials == null || targetMaterials.isEmpty())
+            return Collections.emptyList();
+        return targetMaterials.stream()
+                .filter(material -> material.toLowerCase().contains(input.toLowerCase()))
+                .limit(25)
+                .toList();
     }
 
 }
