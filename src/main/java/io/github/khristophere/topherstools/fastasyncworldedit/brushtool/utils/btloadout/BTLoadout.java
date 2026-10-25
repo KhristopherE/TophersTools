@@ -15,7 +15,9 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
 import java.time.Duration;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Represents a configurable loadout for brush/tool commands, materials, and custom items.
@@ -180,16 +182,16 @@ public class BTLoadout {
      * @param player the target player
      */
     private void bindingCommands(Player player) {
-        brushToolUnbind.processCommand(player, "none");
+        brushToolUnbind.processCommand(player, "none", true);
 
         if (!NA.equals(primaryCommand))
-            brushToolBinding.processCommand(player, primaryCommand);
+            brushToolBinding.processCommand(player, primaryCommand, true);
 
         if (!NA.equals(secondaryCommand))
-            brushToolBinding.processCommand(player, secondaryCommand);
+            brushToolBinding.processCommand(player, secondaryCommand, true);
 
         if (!modifiers.isEmpty())
-            modifiers.forEach(modifier -> brushToolModify.processCommand(player, modifier));
+            modifiers.forEach(modifier -> brushToolModify.processCommand(player, modifier, true));
     }
 
 

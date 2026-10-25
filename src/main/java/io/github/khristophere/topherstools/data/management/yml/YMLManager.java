@@ -35,7 +35,7 @@ public class YMLManager {
         File parentFolder = filePath.isEmpty()
                 ? tophersTools.getDataFolder()
                 : new File(tophersTools.getDataFolder(), filePath);
-        this.file = new File(parentFolder, fileName);
+        this.file = new File(parentFolder, this.fileName);
 
         if (instantSetup)
             setup();

@@ -4,6 +4,7 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.event.platform.CommandEvent;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTCacheManager;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.silencefeedback.FeedbackSilentPlayerWrapper;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolCommandLogic;
 import org.bukkit.entity.Player;
 
@@ -17,10 +18,12 @@ public class brushToolUnbind {
      * @param player The player in the event being called.
      * @param command The command the player is calling.
      */
-    public static void processCommand(Player player, String command) {
+    public static void processCommand(Player player, String command, boolean silenceFAWEMessages) {
+        com.sk89q.worldedit.entity.Player worldEditPlayer = BukkitAdapter.adapt(player);
+        if (silenceFAWEMessages) worldEditPlayer = new FeedbackSilentPlayerWrapper(worldEditPlayer);
         WorldEdit.getInstance().getPlatformManager().getPlatformCommandManager()
                 .handleCommandOnCurrentThread(
-                        new CommandEvent(BukkitAdapter.adapt(player), BrushToolCommandLogic.cleanCommand(command)));
+                        new CommandEvent(worldEditPlayer, BrushToolCommandLogic.cleanCommand(command)));
 
         // Deletes the Brush/Tool from the YML File.
         BTCacheManager.getBrushToolSQL().brushToolSQLRequests.deleteBrushTool(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());

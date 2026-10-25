@@ -46,18 +46,18 @@ public class BrushToolListener implements Listener {
         String command = event.getMessage();
 
         if (BrushToolCommandLogic.isCommandUnbinding(command)){
-            brushToolUnbind.processCommand(event.getPlayer(), command);
+            brushToolUnbind.processCommand(event.getPlayer(), command, false);
             event.setCancelled(true);
             return;
         }
         if (BrushToolCommandLogic.isCommandModifier(command)) {
             event.setCancelled(true);
-            brushToolModify.processCommand(event.getPlayer(), command);
+            brushToolModify.processCommand(event.getPlayer(), command, false);
             return;
         }
         if(BrushToolCommandLogic.isCommandBinding(command)){
             event.setCancelled(true);
-            brushToolBinding.processCommand(event.getPlayer(), command);
+            brushToolBinding.processCommand(event.getPlayer(), command, false);
         }
     }
 

@@ -9,6 +9,7 @@ import com.sk89q.worldedit.event.platform.CommandEvent;
 import com.sk89q.worldedit.world.item.ItemType;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTCacheManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTLoadout;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.silencefeedback.FeedbackSilentPlayerWrapper;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolCommandLogic;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
@@ -25,12 +26,13 @@ public class brushToolBinding {
      * @param player The player in the event being called.
      * @param command The command the player is calling.
      */
-    public static void processCommand(Player player, String command){
+    public static void processCommand(Player player, String command, boolean silenceFAWEMessages){
         ItemStack minecraftItemInHand = player.getInventory().getItemInMainHand();
         ItemType worldEditItemInHand = BukkitAdapter.asItemType(minecraftItemInHand.getType());
         if (worldEditItemInHand == null) return;
 
         com.sk89q.worldedit.entity.Player worldEditPlayer = BukkitAdapter.adapt(player);
+        if (silenceFAWEMessages) worldEditPlayer = new FeedbackSilentPlayerWrapper(worldEditPlayer);
         LocalSession worldEditSession = WorldEdit.getInstance().getSessionManager().get(worldEditPlayer);
         BaseItem worldEditBaseItemInHand = worldEditItemInHand.getDefaultState();
 
