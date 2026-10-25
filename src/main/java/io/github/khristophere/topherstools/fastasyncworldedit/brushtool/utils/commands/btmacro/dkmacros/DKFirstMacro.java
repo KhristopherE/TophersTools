@@ -19,7 +19,7 @@ import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.item.ItemType;
 import io.github.khristophere.topherstools.TophersTools;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTCacheManager;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.Messages;
 import io.github.khristophere.topherstools.globalutils.Utils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -406,9 +406,9 @@ public class DKFirstMacro {
                 "//br command 1 undo"
         );
 
-        player.sendMessage(PlayerMessages.BrushTool_Macro_Issued_DKInstant.getMessage());
-        player.sendMessage(PlayerMessages.recommendedBrushToolMacroGMaskMessage());
-        if (DKFirstMacro.hasGlobalMask(player)) player.sendMessage(PlayerMessages.Warning_GMask_Is_Enabled.getMessage());
+        player.sendMessage(Messages.BrushTool_Macro_Issued_DKInstant.getMessage());
+        player.sendMessage(Messages.recommendedBrushToolMacroGMaskMessage());
+        if (DKFirstMacro.hasGlobalMask(player)) player.sendMessage(Messages.Warning_GMask_Is_Enabled.getMessage());
     }
 
 }

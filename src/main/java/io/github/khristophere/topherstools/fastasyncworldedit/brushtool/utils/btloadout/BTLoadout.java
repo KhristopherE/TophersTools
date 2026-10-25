@@ -4,7 +4,7 @@ import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.co
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.arguments.brushToolBinding;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.arguments.brushToolModify;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.arguments.brushToolUnbind;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.Messages;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -205,7 +205,7 @@ public class BTLoadout {
      */
     public Component getLoadoutPromptMessage() {
         if (isEmpty())
-            return PlayerMessages.Warning_BrushTool_Is_Empty.getMessage();
+            return Messages.Warning_BrushTool_Is_Empty.getMessage();
 
         StringBuilder commandListBuilder = new StringBuilder();
         if (!NA.equals(primaryCommand))
@@ -229,7 +229,7 @@ public class BTLoadout {
                 .clickEvent(ClickEvent.callback(audience -> {
                     if (audience instanceof Player player) {
                         applyTo(player.getUniqueId());
-                        player.sendMessage(PlayerMessages.BrushTool_Applied.getMessage());
+                        player.sendMessage(Messages.BrushTool_Applied.getMessage());
                     }
                 }, options -> options.uses(3).lifetime(Duration.ofMinutes(3))));
         TextComponent toApplyComponent = LegacyComponentSerializer.legacyAmpersand().deserialize("&7to apply to your currently held item. &c(Expires in 3m, 3 uses)");
@@ -240,7 +240,7 @@ public class BTLoadout {
                     .clickEvent(ClickEvent.callback(audience -> {
                         if (audience instanceof Player player) {
                             applyToWithCustomItem(player.getUniqueId(), true);
-                            player.sendMessage(PlayerMessages.BrushTool_Applied.getMessage());
+                            player.sendMessage(Messages.BrushTool_Applied.getMessage());
                         }
                     }, options -> options.uses(3).lifetime(Duration.ofMinutes(3))));
             TextComponent customItemToApplyComponent = LegacyComponentSerializer.legacyAmpersand().deserialize("&7to apply to a copy of the &6Original Item&7. &c(Expires in 3m, 3 uses)");

@@ -4,7 +4,7 @@ import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.co
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTLoadout;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTCacheManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.config.Config;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.Messages;
 import io.github.khristophere.topherstools.globalutils.Utils;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
 import net.kyori.adventure.text.Component;
@@ -46,19 +46,19 @@ public class BTShout {
                 if (coolDowns.needsToWait(player)) return;
                 BTLoadout loadout = BTCacheManager.getBrushToolSQL().getBrushToolLoadoutSQL(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
                 if (loadout != null && !loadout.isEmpty()) {
-                    player.sendMessage(PlayerMessages.BrushTool_Info_Below_Self.getMessage());
+                    player.sendMessage(Messages.BrushTool_Info_Below_Self.getMessage());
                     player.sendMessage(loadout.getLoadoutPromptMessage());
-                    player.sendMessage(PlayerMessages.BrushTool_Shared_With_Everyone.getMessage());
+                    player.sendMessage(Messages.BrushTool_Shared_With_Everyone.getMessage());
 
                     List<Player> copyListOfOnlinePlayers = new ArrayList<>(List.copyOf(Bukkit.getServer().getOnlinePlayers()));
                     copyListOfOnlinePlayers.remove(player);
-                    Component messageForOnlinePlayers = PlayerMessages.BrushTool_Shared_From_Specified_Player.getMessage(player.getName());
+                    Component messageForOnlinePlayers = Messages.BrushTool_Shared_From_Specified_Player.getMessage(player.getName());
                     for (Player playersOnline : copyListOfOnlinePlayers) {
                         playersOnline.sendMessage(loadout.getLoadoutPromptMessage());
                         playersOnline.sendMessage(messageForOnlinePlayers);
                     }
                 } else {
-                    player.sendMessage(PlayerMessages.BrushTool_Not_Bound_Self.getMessage());
+                    player.sendMessage(Messages.BrushTool_Not_Bound_Self.getMessage());
                 }
                 coolDowns.placeCooldown(player);
             });

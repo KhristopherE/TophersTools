@@ -4,7 +4,7 @@ import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.bt
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTCacheManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.config.Config;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.Messages;
 import io.github.khristophere.topherstools.globalutils.Utils;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
 import org.bukkit.Bukkit;
@@ -50,10 +50,10 @@ public class BTGet {
                 if (coolDowns.needsToWait(player)) return;
                 BTLoadout loadout = BTCacheManager.getBrushToolSQL().getBrushToolLoadoutSQL(player.getUniqueId(), player.getInventory().getItemInMainHand().getType().name());
                 if (loadout != null && !loadout.isEmpty()) {
-                    player.sendMessage(PlayerMessages.BrushTool_Info_Below_Self.getMessage());
+                    player.sendMessage(Messages.BrushTool_Info_Below_Self.getMessage());
                     player.sendMessage(loadout.getLoadoutPromptMessage());
                 } else {
-                    player.sendMessage(PlayerMessages.BrushTool_Not_Bound_Self.getMessage());
+                    player.sendMessage(Messages.BrushTool_Not_Bound_Self.getMessage());
                 }
                 coolDowns.placeCooldown(player);
             });
@@ -77,14 +77,14 @@ public class BTGet {
             Scheduler.runSequentialAsync( () -> {
                 if (coolDowns.needsToWait(player)) return;
                 if (onlinePlayer == null) {
-                    player.sendMessage(PlayerMessages.BrushTool_Info_Inquiry_Player_Offline_Requesting_Specify_Material.getMessage());
+                    player.sendMessage(Messages.BrushTool_Info_Inquiry_Player_Offline_Requesting_Specify_Material.getMessage());
                 } else {
                     BTLoadout loadout = BTCacheManager.getBrushToolSQL().getBrushToolLoadoutSQL(onlinePlayer.getUniqueId(), onlinePlayer.getInventory().getItemInMainHand().getType().name());
                     if (loadout != null && !loadout.isEmpty()) {
-                        player.sendMessage(PlayerMessages.BrushTool_Info_Below_Specified_Player.getMessage(onlinePlayer.getName()));
+                        player.sendMessage(Messages.BrushTool_Info_Below_Specified_Player.getMessage(onlinePlayer.getName()));
                         player.sendMessage(loadout.getLoadoutPromptMessage());
                     } else {
-                        player.sendMessage(PlayerMessages.BrushTool_Not_Bound_Specified_Player.getMessage(onlinePlayer.getName()));
+                        player.sendMessage(Messages.BrushTool_Not_Bound_Specified_Player.getMessage(onlinePlayer.getName()));
                     }
                 }
                 coolDowns.placeCooldown(player);
@@ -111,10 +111,10 @@ public class BTGet {
                 UUID requestedPlayerUUID = BTCacheManager.getUsernameUUIDMapInCache().get(requestedPlayer);
                 BTLoadout loadout = BTCacheManager.getBrushToolSQL().getBrushToolLoadoutSQL(requestedPlayerUUID, requestedMaterial.toUpperCase());
                 if (loadout != null && !loadout.isEmpty()) {
-                    player.sendMessage(PlayerMessages.BrushTool_Info_Below_Specified_Player_Specified_Material.getMessage(requestedPlayer, requestedMaterial));
+                    player.sendMessage(Messages.BrushTool_Info_Below_Specified_Player_Specified_Material.getMessage(requestedPlayer, requestedMaterial));
                     player.sendMessage(loadout.getLoadoutPromptMessage());
                 } else {
-                    player.sendMessage(PlayerMessages.BrushTool_Not_Bound_Specified_Player_Specified_Material.getMessage(requestedPlayer, requestedMaterial));
+                    player.sendMessage(Messages.BrushTool_Not_Bound_Specified_Player_Specified_Material.getMessage(requestedPlayer, requestedMaterial));
                 }
                 coolDowns.placeCooldown(player);
             });

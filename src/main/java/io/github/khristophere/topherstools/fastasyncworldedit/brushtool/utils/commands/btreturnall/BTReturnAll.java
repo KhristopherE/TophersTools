@@ -4,7 +4,7 @@ import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.bt
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTLoadout;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.config.Config;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.Messages;
 import io.github.khristophere.topherstools.globalutils.Utils;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
 import org.bukkit.Bukkit;
@@ -47,7 +47,7 @@ public class BTReturnAll {
                 if (coolDowns.needsToWait(player)) return;
                 List<String> allMaterialsInFileForUUID = BTCacheManager.getUUIDMaterialBindsInCache().get(player.getUniqueId());
                 if (allMaterialsInFileForUUID == null || allMaterialsInFileForUUID.isEmpty()) {
-                    player.sendMessage(PlayerMessages.BrushTools_Not_On_File.getMessage());
+                    player.sendMessage(Messages.BrushTools_Not_On_File.getMessage());
                     return;
                 }
                 boolean didAnyLoadoutApply = false;
@@ -92,9 +92,9 @@ public class BTReturnAll {
                         }
                     }
                     if (finalDidAnyLoadoutApply){
-                        player.sendMessage(PlayerMessages.BrushTools_ReApplied.getMessage());
+                        player.sendMessage(Messages.BrushTools_ReApplied.getMessage());
                     } else {
-                        player.sendMessage(PlayerMessages.Warning_Unable_To_Apply_BrushTools_From_File.getMessage());
+                        player.sendMessage(Messages.Warning_Unable_To_Apply_BrushTools_From_File.getMessage());
                     }
                 }));
                 coolDowns.placeCooldown(player);

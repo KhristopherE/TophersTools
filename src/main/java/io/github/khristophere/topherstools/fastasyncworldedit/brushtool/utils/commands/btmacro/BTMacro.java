@@ -5,7 +5,7 @@ import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.bt
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btmacro.dkmacros.DKFirstMacro;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.config.Config;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.Messages;
 import io.github.khristophere.topherstools.globalutils.Utils;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
 import org.bukkit.entity.Player;
@@ -57,15 +57,15 @@ public class BTMacro {
             if (coolDownsSaves.needsToWait(player)) return;
             String finalMacroName = sanitizeInput(macroName);
             if (finalMacroName.length() > 48){
-                player.sendMessage(PlayerMessages.BrushTool_Max_Length.getMessage());
+                player.sendMessage(Messages.BrushTool_Max_Length.getMessage());
                 return;
             }
             BTLoadoutMacro BTLoadoutMacro = BTCacheManager.getBTLoadoutMacroFromCacheOrFile(finalMacroName);
             if (BTLoadoutMacro.alreadyExists() && !override){
-                player.sendMessage(PlayerMessages.BrushTool_Macro_Already_Exists_Requesting_Override.getMessageMacroName(finalMacroName));
+                player.sendMessage(Messages.BrushTool_Macro_Already_Exists_Requesting_Override.getMessageMacroName(finalMacroName));
                 return;
             }
-            player.sendMessage(PlayerMessages.BrushTool_Macro_Saved.getMessageMacroName(finalMacroName));
+            player.sendMessage(Messages.BrushTool_Macro_Saved.getMessageMacroName(finalMacroName));
             BTLoadoutMacro.saveToFile(player);
             BTCacheManager.addBTLoadoutMacroToCache(finalMacroName);
             coolDownsSaves.placeCooldown(player);
@@ -88,19 +88,19 @@ public class BTMacro {
             if (coolDownsLoads.needsToWait(player)) return;
             String finalMacroName = sanitizeInput(macroName);
             if (finalMacroName.length() > 48){
-                player.sendMessage(PlayerMessages.BrushTool_Max_Length.getMessage());
+                player.sendMessage(Messages.BrushTool_Max_Length.getMessage());
                 return;
             }
             Scheduler.runSequentialAsync( () -> {
                 BTLoadoutMacro BTLoadoutMacro = BTCacheManager.getBTLoadoutMacroFromCacheOrFile(finalMacroName);
                 if (!BTLoadoutMacro.alreadyExists()){
-                    player.sendMessage(PlayerMessages.BrushTool_Macro_Not_Exist.getMessageMacroName(finalMacroName));
+                    player.sendMessage(Messages.BrushTool_Macro_Not_Exist.getMessageMacroName(finalMacroName));
                     return;
                 }
                 if (!BTLoadoutMacro.alreadyLoadedFromFile())
                     BTLoadoutMacro.loadFromFile();
                 if (BTLoadoutMacro.isBrushToolLoadoutEmpty()){
-                    player.sendMessage(PlayerMessages.Warning_BrushTool_Macro_Is_Empty.getMessageMacroName(finalMacroName));
+                    player.sendMessage(Messages.Warning_BrushTool_Macro_Is_Empty.getMessageMacroName(finalMacroName));
                     return;
                 }
                 Scheduler.runOnPrimaryThread(( () -> BTLoadoutMacro.applyTo(player.getUniqueId())));
@@ -125,34 +125,34 @@ public class BTMacro {
             if (coolDownsDeletes.needsToWait(player)) return;
             String finalMacroName = sanitizeInput(macroName);
             if (finalMacroName.length() > 48){
-                player.sendMessage(PlayerMessages.BrushTool_Max_Length.getMessage());
+                player.sendMessage(Messages.BrushTool_Max_Length.getMessage());
                 return;
             }
             Scheduler.runSequentialAsync( () -> {
                 BTLoadoutMacro BTLoadoutMacro = BTCacheManager.getBTLoadoutMacroFromCacheOrFile(finalMacroName);
                 if (!BTLoadoutMacro.alreadyExists()){
-                    player.sendMessage(PlayerMessages.BrushTool_Macro_Not_Exist.getMessageMacroName(finalMacroName));
+                    player.sendMessage(Messages.BrushTool_Macro_Not_Exist.getMessageMacroName(finalMacroName));
                 } else {
                     if (confirmation != null && confirmation.equalsIgnoreCase("Confirm")){
                         if (pendingDeletions.containsKey(player.getUniqueId()) && pendingDeletions.get(player.getUniqueId()).macroName.equals(finalMacroName)){
                             if (!pendingDeletions.get(player.getUniqueId()).isExpired()){
                                 if (BTLoadoutMacro.deleteBrushToolLoadoutMacro()){
-                                    player.sendMessage(PlayerMessages.BrushTool_Macro_Deleted.getMessageMacroName(finalMacroName));
+                                    player.sendMessage(Messages.BrushTool_Macro_Deleted.getMessageMacroName(finalMacroName));
                                     BTCacheManager.removeBTLoadoutMacroNameFromCache(finalMacroName);
                                     BTCacheManager.removeBTLoadoutMacroFromCache(finalMacroName);
                                     pendingDeletions.remove(player.getUniqueId());
                                     coolDownsDeletes.placeCooldown(player);
                                 } else {
-                                    player.sendMessage(PlayerMessages.BrushTool_Macro_Deletion_Failed.getMessageMacroName(finalMacroName));
+                                    player.sendMessage(Messages.BrushTool_Macro_Deletion_Failed.getMessageMacroName(finalMacroName));
                                 }
                             } else {
-                                player.sendMessage(PlayerMessages.BrushTool_Macro_Delete_Confirmation_Window_Expired.getMessageMacroName(finalMacroName));
+                                player.sendMessage(Messages.BrushTool_Macro_Delete_Confirmation_Window_Expired.getMessageMacroName(finalMacroName));
                             }
                         } else {
-                            player.sendMessage(PlayerMessages.BrushTool_Macro_Delete_Requesting_Initial_Request_Before_Confirmation.getMessageMacroName(finalMacroName));
+                            player.sendMessage(Messages.BrushTool_Macro_Delete_Requesting_Initial_Request_Before_Confirmation.getMessageMacroName(finalMacroName));
                         }
                     } else {
-                        player.sendMessage(PlayerMessages.BrushTool_Macro_Delete_Requesting_Confirmation.getMessageMacroName(finalMacroName));
+                        player.sendMessage(Messages.BrushTool_Macro_Delete_Requesting_Confirmation.getMessageMacroName(finalMacroName));
                         pendingDeletions.put(player.getUniqueId(), new PendingDeletion(finalMacroName));
                     }
                 }
@@ -188,7 +188,7 @@ public class BTMacro {
             if (player.getUniqueId().equals(UUID.fromString("9e278e4b-5296-4313-8e05-feedaeaaa050")) || player.getUniqueId().equals(UUID.fromString("fbbfa97b-d2e2-47e1-8987-15e83d8e005c"))){
                 DKFirstMacro.DKInstantMacro(player);
             } else {
-                player.sendMessage(PlayerMessages.BrushTool_Macro_Help.getMessage());
+                player.sendMessage(Messages.BrushTool_Macro_Help.getMessage());
             }
         }
     }

@@ -4,7 +4,7 @@ import io.github.khristophere.topherstools.data.management.yml.YMLManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btmacro.dkmacros.DKFirstMacro;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolCommandLogic;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolModifier;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.Messages;
 import io.github.khristophere.topherstools.globalutils.Utils;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
 import org.bukkit.Bukkit;
@@ -132,7 +132,7 @@ public class BTLoadoutMacro {
         if (player == null || !player.isOnline()) return;
 
         if (brushToolLoadoutMap.isEmpty()) {
-            player.sendMessage(PlayerMessages.Warning_BrushTool_Macro_Is_Empty.getMessageMacroName(macroName));
+            player.sendMessage(Messages.Warning_BrushTool_Macro_Is_Empty.getMessageMacroName(macroName));
             return;
         }
 
@@ -147,7 +147,7 @@ public class BTLoadoutMacro {
         }
 
         if (failures.isEmpty()) {
-            player.sendMessage(PlayerMessages.BrushTool_Macro_Applied.getMessageMacroName(macroName));
+            player.sendMessage(Messages.BrushTool_Macro_Applied.getMessageMacroName(macroName));
         } else {
             StringBuilder stringBuilder = new StringBuilder();
             for (int i = 0; i < failures.size(); i++) {
@@ -158,12 +158,12 @@ public class BTLoadoutMacro {
                     stringBuilder.append("&7.");
                 }
             }
-            player.sendMessage(PlayerMessages.BrushTool_Macro_Applied_With_Failures_Missing_Material
+            player.sendMessage(Messages.BrushTool_Macro_Applied_With_Failures_Missing_Material
                     .getMessageMacroNameFailuresInventorySlots(macroName, failures.size(), stringBuilder.toString()));
         }
 
         if (DKFirstMacro.hasGlobalMask(player))
-            player.sendMessage(PlayerMessages.Warning_GMask_Is_Enabled.getMessage());
+            player.sendMessage(Messages.Warning_GMask_Is_Enabled.getMessage());
     }
 
     /**

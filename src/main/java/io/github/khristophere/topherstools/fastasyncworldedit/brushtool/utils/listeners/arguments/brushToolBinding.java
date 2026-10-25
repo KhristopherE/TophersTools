@@ -11,7 +11,7 @@ import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.bt
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTLoadout;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.silencefeedback.FeedbackSilentPlayerWrapper;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.util.BrushToolCommandLogic;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.Messages;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -68,7 +68,7 @@ public class brushToolBinding {
                 BTLoadout oldLoadout = BTCacheManager.getBrushToolSQL().getBrushToolLoadoutSQL(player.getUniqueId(), minecraftItemInHand.getType().name());
                 if (oldLoadout != null && !oldLoadout.isEmpty()) {
                     player.sendMessage(oldLoadout.getLoadoutPromptMessage());
-                    player.sendMessage(PlayerMessages.getBuggedStateSecondaryBrushInvalidMessage());
+                    player.sendMessage(Messages.getBuggedStateSecondaryBrushInvalidMessage());
                 }
                 BTCacheManager.getBrushToolSQL().deleteBrushToolLoadoutSQL(player.getUniqueId(), minecraftItemInHand.getType().name());
             });

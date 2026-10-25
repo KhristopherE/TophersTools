@@ -77,7 +77,7 @@ public class BrushToolListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     private void onPlayerJoin(PlayerQuitEvent event) {
-        Cooldown.removePlayerFromMaps(event.getPlayer().getUniqueId());
+        Cooldown.removePlayerFromAllCooldowns(event.getPlayer().getUniqueId());
     }
 
 }

@@ -6,7 +6,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
-public enum PlayerMessages {
+public enum Messages {
     BrushTool_Not_Bound_Self(
             "&7There is &cno brush/tool &7currently bound to &cthis item&7."),
     BrushTool_Not_Bound_Specified_Player(
@@ -67,12 +67,15 @@ public enum PlayerMessages {
             "&7Deletion request &econfirmation &7for macro &b%macroName% &7has &cexpired&7. Please try again."),
     BrushTool_Macro_Help(
             "&7Please specify an action: &esave&7, &eload&7, or &edelete&7."),
-    FAWEBTUtils_Config_Reloaded(
+    Config_Reloaded(
             "&eThe FAWEBTUtils Conig has been reloaded."),
+    Command_Reserved_For_Players(
+            "&cThis command is reserved for players."),
+
     ;
 
     private final String message;
-    PlayerMessages(String message) {
+    Messages(String message) {
         this.message = message;
     }
 

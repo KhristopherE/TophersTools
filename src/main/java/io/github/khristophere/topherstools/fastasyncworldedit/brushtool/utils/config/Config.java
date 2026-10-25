@@ -145,8 +145,8 @@ public class Config {
     private static boolean checkAndSet(String path, @Nullable Object value, @Nullable List<String> comments) {
         var config = configYML.getConfig();
         if (!config.contains(path)) {
-            if (comments != null && !comments.isEmpty()) config.setComments(path, comments);
             if (value != null) config.set(path, value);
+            if (comments != null && !comments.isEmpty()) config.setComments(path, comments);
             return true;
         }
         return false;

@@ -1,7 +1,7 @@
 package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.reloadconfig;
 
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.config.Config;
-import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.Messages;
 import io.github.khristophere.topherstools.globalutils.Utils;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
@@ -22,7 +22,7 @@ public class ReloadConfig {
     @Permission("topherstools.reloadconfig.fawebtutils")
     private void reloadFAWEBTUtils(Source sender) {
         Config.reloadConfigSettings();
-        sender.source().sendMessage(PlayerMessages.FAWEBTUtils_Config_Reloaded.getMessage());
+        sender.source().sendMessage(Messages.Config_Reloaded.getMessage());
     }
 }
 
