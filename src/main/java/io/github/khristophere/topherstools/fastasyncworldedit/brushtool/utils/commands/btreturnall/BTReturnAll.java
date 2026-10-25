@@ -3,6 +3,7 @@ package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.c
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTCacheManager;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTLoadout;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.config.Config;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
 import io.github.khristophere.topherstools.globalutils.Utils;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
@@ -22,9 +23,13 @@ public class BTReturnAll {
 
     public BTReturnAll(){
         Utils.registerClassWithCommandManager(this);
-        this.coolDowns = new Cooldown(10000);
+        coolDowns = new Cooldown(Config.CooldownBTReturnAll);
     }
-    private final Cooldown coolDowns;
+
+    private static Cooldown coolDowns;
+    public static void refreshCooldownConfig(){
+        coolDowns = new Cooldown(Config.CooldownBTReturnAll);
+    }
 
     /**
      * Provides the requester all of their brush/tool bindings from the database.

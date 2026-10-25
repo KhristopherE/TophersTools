@@ -1,5 +1,10 @@
 package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands;
 
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btclearall.BTClearAll;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btget.BTGet;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btmacro.BTMacro;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btreturnall.BTReturnAll;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btshout.BTShout;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
@@ -8,13 +13,22 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Cooldown {
 
-    public static final List<Cooldown> allCoolDowns = new ArrayList<>();
-    private final Map<UUID, Long> uuidToLongMap = new ConcurrentHashMap<>();
+    public static List<Cooldown> allCoolDowns = new ArrayList<>();
+    private Map<UUID, Long> uuidToLongMap = new ConcurrentHashMap<>();
     private final long CoolDownTimeMS;
 
     public Cooldown(long coolDownTimeMS){
         this.CoolDownTimeMS = coolDownTimeMS;
         allCoolDowns.add(this);
+    }
+
+    public static void refreshAllCooldowns(){
+        allCoolDowns = new ArrayList<>();
+        BTClearAll.refreshCooldownConfig();
+        BTGet.refreshCooldownConfig();
+        BTMacro.refreshCooldownConfig();
+        BTReturnAll.refreshCooldownConfig();
+        BTShout.refreshCooldownConfig();
     }
 
     public boolean needsToWait(Player player){

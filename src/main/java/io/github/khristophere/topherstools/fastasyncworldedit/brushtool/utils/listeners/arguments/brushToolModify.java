@@ -25,13 +25,13 @@ public class brushToolModify {
      * @param player The player in the event being called.
      * @param command The command the player is calling.
      */
-    public static void processCommand(org.bukkit.entity.Player player, String command, boolean silenceFAWEMessages) {
+    public static void processCommand(org.bukkit.entity.Player player, String command, boolean silenceFAWEFeedback) {
         ItemStack itemInHand = player.getInventory().getItemInMainHand();
         ItemType worldEditItemInHand = BukkitAdapter.asItemType(itemInHand.getType());
         if (worldEditItemInHand == null) return;
 
         com.sk89q.worldedit.entity.Player worldEditPlayer = BukkitAdapter.adapt(player);
-        if (silenceFAWEMessages) worldEditPlayer = new FeedbackSilentPlayerWrapper(worldEditPlayer);
+        if (silenceFAWEFeedback) worldEditPlayer = new FeedbackSilentPlayerWrapper(worldEditPlayer);
         LocalSession worldEditSession = WorldEdit.getInstance().getSessionManager().get(worldEditPlayer);
         BaseItem worldEditBaseItemInHand = worldEditItemInHand.getDefaultState();
 

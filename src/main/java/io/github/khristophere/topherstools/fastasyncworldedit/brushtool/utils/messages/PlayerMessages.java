@@ -67,6 +67,8 @@ public enum PlayerMessages {
             "&7Deletion request &econfirmation &7for macro &b%macroName% &7has &cexpired&7. Please try again."),
     BrushTool_Macro_Help(
             "&7Please specify an action: &esave&7, &eload&7, or &edelete&7."),
+    FAWEBTUtils_Config_Reloaded(
+            "&eThe FAWEBTUtils Conig has been reloaded."),
     ;
 
     private final String message;

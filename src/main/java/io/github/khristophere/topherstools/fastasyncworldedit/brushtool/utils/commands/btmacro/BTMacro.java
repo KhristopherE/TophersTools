@@ -4,6 +4,7 @@ import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.bt
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTLoadoutMacro;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.btmacro.dkmacros.DKFirstMacro;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.config.Config;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
 import io.github.khristophere.topherstools.globalutils.Utils;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
@@ -25,14 +26,19 @@ public class BTMacro {
 
     public BTMacro(){
         Utils.registerClassWithCommandManager(this);
-        this.coolDownsSaves = new Cooldown(10000);
-        this.coolDownsLoads = new Cooldown(10000);
-        this.coolDownsDeletes = new Cooldown(10000);
+        coolDownsSaves = new Cooldown(Config.CooldownBTMacroSave);
+        coolDownsLoads = new Cooldown(Config.CooldownBTMacroLoad);
+        coolDownsDeletes = new Cooldown(Config.CooldownBTMacroDelete);
     }
 
-    private final Cooldown coolDownsSaves;
-    private final Cooldown coolDownsLoads;
-    private final Cooldown coolDownsDeletes;
+    private static Cooldown coolDownsSaves;
+    private static Cooldown coolDownsLoads;
+    private static Cooldown coolDownsDeletes;
+    public static void refreshCooldownConfig(){
+        coolDownsSaves = new Cooldown(Config.CooldownBTMacroSave);
+        coolDownsLoads = new Cooldown(Config.CooldownBTMacroLoad);
+        coolDownsDeletes = new Cooldown(Config.CooldownBTMacroDelete);
+    }
 
     /**
      * Allows the player to save a current inventory from slots 0-35 with data from the current Brush/Tool Data base into a macro form.

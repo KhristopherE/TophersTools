@@ -3,6 +3,7 @@ package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.c
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.commands.Cooldown;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTLoadout;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout.BTCacheManager;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.config.Config;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.messages.PlayerMessages;
 import io.github.khristophere.topherstools.globalutils.Utils;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
@@ -20,9 +21,13 @@ public class BTShout {
 
     public BTShout(){
         Utils.registerClassWithCommandManager(this);
-        this.coolDowns = new Cooldown(5000);
+        coolDowns = new Cooldown(Config.CooldownBTShout);
     }
-    private final Cooldown coolDowns;
+
+    private static Cooldown coolDowns;
+    public static void refreshCooldownConfig(){
+        coolDowns = new Cooldown(Config.CooldownBTShout);
+    }
 
     /**
      * Sends all online players a message containing the command issuing players currently held brush.

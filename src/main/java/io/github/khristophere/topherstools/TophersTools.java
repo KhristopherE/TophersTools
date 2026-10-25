@@ -27,6 +27,7 @@ public final class TophersTools extends JavaPlugin {
      */
     @Override
     public void onDisable() {
+        FAWEBTUtils.disable();
         Scheduler.shutdownAsyncThread();
     }
 

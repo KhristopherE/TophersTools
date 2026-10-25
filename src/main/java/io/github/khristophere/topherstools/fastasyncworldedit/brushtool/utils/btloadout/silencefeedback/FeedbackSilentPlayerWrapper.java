@@ -5,7 +5,7 @@ import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.util.formatting.text.Component;
 
 /**
- * Avoids printing messages except continues to print debug & error messages.
+ * Avoids printing (feedback) messages except continues to print debug & error messages.
  */
 public class FeedbackSilentPlayerWrapper extends AsyncPlayer {
     public FeedbackSilentPlayerWrapper(Player parent) {super(parent);}

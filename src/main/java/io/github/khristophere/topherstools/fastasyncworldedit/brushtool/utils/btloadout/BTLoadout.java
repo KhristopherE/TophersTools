@@ -1,5 +1,6 @@
 package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout;
 
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.config.Config;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.arguments.brushToolBinding;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.arguments.brushToolModify;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.listeners.arguments.brushToolUnbind;
@@ -182,16 +183,17 @@ public class BTLoadout {
      * @param player the target player
      */
     private void bindingCommands(Player player) {
-        brushToolUnbind.processCommand(player, "none", true);
+        boolean silenceFAWEFeedback = Config.silenceFAWEFeedback;
+        brushToolUnbind.processCommand(player, "none", silenceFAWEFeedback);
 
         if (!NA.equals(primaryCommand))
-            brushToolBinding.processCommand(player, primaryCommand, true);
+            brushToolBinding.processCommand(player, primaryCommand, silenceFAWEFeedback);
 
         if (!NA.equals(secondaryCommand))
-            brushToolBinding.processCommand(player, secondaryCommand, true);
+            brushToolBinding.processCommand(player, secondaryCommand, silenceFAWEFeedback);
 
         if (!modifiers.isEmpty())
-            modifiers.forEach(modifier -> brushToolModify.processCommand(player, modifier, true));
+            modifiers.forEach(modifier -> brushToolModify.processCommand(player, modifier, silenceFAWEFeedback));
     }
 
 

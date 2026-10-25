@@ -1,6 +1,7 @@
 package io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.btloadout;
 
 import io.github.khristophere.topherstools.TophersTools;
+import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.config.Config;
 import io.github.khristophere.topherstools.fastasyncworldedit.brushtool.utils.sql.BrushToolSQL;
 import io.github.khristophere.topherstools.scheduler.Scheduler;
 
@@ -15,14 +16,14 @@ import java.util.stream.Stream;
 
 public class BTCacheManager {
 
-    private static BrushToolSQL brushToolSQL;
+    private static final BrushToolSQL brushToolSQL = new BrushToolSQL("FAWE-BT-Utils/SQLData", "PlayerBindings");;
 
     private static final Map<UUID, List<String>> UUID_TO_MATERIALS_MAP = new ConcurrentHashMap<>();
     private static final Map<String, UUID> USERNAME_TO_UUID_MAP = new ConcurrentHashMap<>();
     private static final List<String> AVAILABLE_MACROS = new CopyOnWriteArrayList<>();
 
     public BTCacheManager() {
-        brushToolSQL = new BrushToolSQL("FAWE-BT-Utils/SQLData", "PlayerBindings");
+        refreshMacroCache();
         Scheduler.runSequentialAsync(() -> {
             brushToolSQL.initializeTable();
             Map<UUID, List<String>> fetchedMaterialsMap = brushToolSQL.getUUIDMaterialMapSQL();
@@ -149,16 +150,29 @@ public class BTCacheManager {
         });
     }
 
-    private static final int MAX_CACHED_MACROS = 5;
     // Thread-safe LinkedHashMap configured as an LRU (Least Recently Used) cache (accessOrder = true)
-    private static final Map<String, BTLoadoutMacro> MACRO_CACHE = Collections.synchronizedMap(
-            new LinkedHashMap<String, BTLoadoutMacro>(MAX_CACHED_MACROS, 0.75f, true) {
-                @Override
-                protected boolean removeEldestEntry(Map.Entry<String, BTLoadoutMacro> eldest) {
-                    return size() > MAX_CACHED_MACROS;
+    private static Map<String, BTLoadoutMacro> macroCache = null;
+    /**
+     * Refreshes the macro cache, updating its maximum capacity from the configuration
+     * file and seamlessly transferring any previously cached macros up to the new limit.
+     */
+    public static void refreshMacroCache() {
+        Map<String, BTLoadoutMacro> oldEntries = null;
+        if (macroCache != null) {
+            oldEntries = new LinkedHashMap<>(macroCache);
+        }
+        macroCache = Collections.synchronizedMap(
+                new LinkedHashMap<>(Config.maxCachedMacros, 0.75f, true) {
+                    @Override
+                    protected boolean removeEldestEntry(Map.Entry<String, BTLoadoutMacro> eldest) {
+                        return size() > Config.maxCachedMacros;
+                    }
                 }
-            }
-    );
+        );
+        if (oldEntries != null && !oldEntries.isEmpty()) {
+            macroCache.putAll(oldEntries);
+        }
+    }
 
     /**
      * Retrieves a macro by name, utilizing a 5-item LRU (Least Recently Used) memory cache.
@@ -171,13 +185,13 @@ public class BTCacheManager {
      */
     public static BTLoadoutMacro getBTLoadoutMacroFromCacheOrFile(String macroName) {
         if (macroName == null) return null;
-        BTLoadoutMacro cachedMacro = MACRO_CACHE.get(macroName);
+        BTLoadoutMacro cachedMacro = macroCache.get(macroName);
         if (cachedMacro != null)
             return cachedMacro;
         BTLoadoutMacro newMacro = new BTLoadoutMacro(macroName);
         if (newMacro.alreadyExists()) {
             newMacro.loadFromFile();
-            MACRO_CACHE.put(macroName, newMacro);
+            macroCache.put(macroName, newMacro);
             return newMacro;
         }
         return newMacro;
@@ -189,7 +203,7 @@ public class BTCacheManager {
      * @param macroName the name of the macro to remove from cache
      */
     public static void removeBTLoadoutMacroFromCache(String macroName) {
-        if (macroName != null) MACRO_CACHE.remove(macroName);
+        if (macroName != null) macroCache.remove(macroName);
     }
 
     /**
