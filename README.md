@@ -122,9 +122,7 @@
 
 ## 📦 Dependencies & Acknowledgments
 
-----
-
-### Shaded / Embedded Libraries
+### Shaded / Embedded Libraries - Credits
 
 The following libraries are bundled directly inside the `TophersTools` compiled binary (`.jar`):
 
