@@ -1,0 +1,9 @@
+name: TophersTools
+version: '${version}'
+main: io.github.khristophere.topherstools.TophersTools
+api-version: '26.3'
+description: '${description}'
+author: KhristopherE
+website: https://github.com/KhristopherE/TophersTools
+depend:
+  - FastAsyncWorldEdit
