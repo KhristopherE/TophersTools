@@ -120,6 +120,13 @@
 
 ---
 
+### Posted Websites
+
+- **[modrinth](https://modrinth.com/plugin/topherstools)**
+- **[Hangar](https://hangar.papermc.io/KhristopherE/TophersTools)**
+
+---
+
 ## 📦 Dependencies & Acknowledgments
 
 ### Shaded / Embedded Libraries - Credits
