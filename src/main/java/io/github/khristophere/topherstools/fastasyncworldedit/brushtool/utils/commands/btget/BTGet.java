@@ -169,7 +169,9 @@ public class BTGet {
         String material = requestedMaterial.toUpperCase();
 
         Scheduler.runSequentialAsync(() -> {
-            BTLoadout loadout = BTCacheManager.getBTSQLExecutor().getBrushToolLoadout(targetUuid, material);
+            BTLoadout loadout = null;
+            if (targetUuid != null)
+                loadout = BTCacheManager.getBTSQLExecutor().getBrushToolLoadout(targetUuid, material);
             Player senderPlayer = Bukkit.getPlayer(senderUuid);
             if (senderPlayer == null || !senderPlayer.isOnline()) return;
 

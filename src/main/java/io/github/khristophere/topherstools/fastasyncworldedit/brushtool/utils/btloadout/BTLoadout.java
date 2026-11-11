@@ -92,13 +92,13 @@ public class BTLoadout {
      * @param commandListBuilder the string builder to append to.
      * @param modifiers          the list of modifiers.
      */
-    public static void AppendCommaSeparatedList(@NotNull StringBuilder commandListBuilder, @NotNull List<String> modifiers) {
+    public static void AppendSeparatedList(@NotNull StringBuilder commandListBuilder, @NotNull List<String> modifiers) {
         for (int i = 0; i < modifiers.size(); i++) {
             if (i == modifiers.size() - 1) {
-                commandListBuilder.append(modifiers.get(i)).append("&7.\n");
+                commandListBuilder.append(modifiers.get(i)).append("\n");
                 break;
             }
-            commandListBuilder.append(modifiers.get(i)).append("&7, &e");
+            commandListBuilder.append(modifiers.get(i)).append(" &9| &7");
         }
     }
 
@@ -298,26 +298,26 @@ public class BTLoadout {
         StringBuilder commandListBuilder = new StringBuilder();
 
         if (!NA.equals(primaryCommand))
-            commandListBuilder.append("&8[&aPRIMARY&8] &e").append(primaryCommand).append("\n");
+            commandListBuilder.append("\n&8[&2Primary&8] &7").append(primaryCommand).append("\n");
         if (!primaryModifiers.isEmpty()) {
-            commandListBuilder.append("&8[&aPRIMARY MODIFIERS&8] &e");
-            AppendCommaSeparatedList(commandListBuilder, primaryModifiers);
+            commandListBuilder.append("&8>>>[&3Modifiers&8] &7");
+            AppendSeparatedList(commandListBuilder, primaryModifiers);
         }
 
         if (!NA.equals(secondaryCommand))
-            commandListBuilder.append("&8[&bSECONDARY&8] &e").append(secondaryCommand).append("\n");
+            commandListBuilder.append("\n&8[&2Secondary&8] &7").append(secondaryCommand).append("\n");
         if (!secondaryModifiers.isEmpty()) {
-            commandListBuilder.append("&8[&bSECONDARY MODIFIERS&8] &e");
-            AppendCommaSeparatedList(commandListBuilder, secondaryModifiers);
+            commandListBuilder.append("&8>>>[&3Modifiers&8] &7");
+            AppendSeparatedList(commandListBuilder, secondaryModifiers);
         }
 
         if (!globalModifiers.isEmpty()) {
-            commandListBuilder.append("&8[&6GLOBAL MODIFIERS&8] &e");
-            AppendCommaSeparatedList(commandListBuilder, globalModifiers);
+            commandListBuilder.append("\n&8[&6Global Modifiers&8] &7");
+            AppendSeparatedList(commandListBuilder, globalModifiers);
         }
 
         TextComponent commandListComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(commandListBuilder.toString());
-        TextComponent pleaseComponent = LegacyComponentSerializer.legacyAmpersand().deserialize("&7Please ");
+        TextComponent pleaseComponent = LegacyComponentSerializer.legacyAmpersand().deserialize("\n&7Please ");
         Component clickHereComponent = LegacyComponentSerializer.legacyAmpersand().deserialize("&8[&aClick Here&8] ")
                 .clickEvent(ClickEvent.callback(audience -> {
                     if (audience instanceof Player player) {
@@ -325,7 +325,7 @@ public class BTLoadout {
                         player.sendMessage(Messages.BrushTool_Applied.getMessage());
                     }
                 }, options -> options.uses(3).lifetime(Duration.ofMinutes(3))));
-        TextComponent toApplyComponent = LegacyComponentSerializer.legacyAmpersand().deserialize("&7to apply to your currently held item. &c(Expires in 3m, 3 uses)");
+        TextComponent toApplyComponent = LegacyComponentSerializer.legacyAmpersand().deserialize("&7to &aapply to &7your currently &aheld item&7. &7(&eExpires in 3m, 3 uses&7)");
 
         if (hasCustomItem()) {
             TextComponent customItemOrComponent = LegacyComponentSerializer.legacyAmpersand().deserialize("\n&7OR ");
@@ -336,7 +336,7 @@ public class BTLoadout {
                             player.sendMessage(Messages.BrushTool_Applied.getMessage());
                         }
                     }, options -> options.uses(3).lifetime(Duration.ofMinutes(3))));
-            TextComponent customItemToApplyComponent = LegacyComponentSerializer.legacyAmpersand().deserialize("&7to apply to a copy of the &6Original Item&7. &c(Expires in 3m, 3 uses)");
+            TextComponent customItemToApplyComponent = LegacyComponentSerializer.legacyAmpersand().deserialize("&7to &aapply &7to &aa copy &7of the &6Original Item&7. &7(&eExpires in 3m, 3 uses&7)");
             toApplyComponent = toApplyComponent.append(customItemOrComponent).append(customItemClickHereComponent).append(customItemToApplyComponent);
         }
 

@@ -29,69 +29,69 @@ import org.jetbrains.annotations.NotNull;
  */
 public enum Messages {
     BrushTool_Not_Bound_Self(
-            "&7There is &cno brush/tool &7currently bound to &cthis item&7."),
+            getHeader() + "&7There is &cno brush/tool &7currently bound to &cthis item&7."),
     BrushTool_Not_Bound_Specified_Player(
-            "&7There is &cno brush/tool &7currently bound to &d%playerName%&7's held item."),
+            getHeader() + "&7There is &cno brush/tool &7currently bound to &d%playerName%&7's &cheld item&7."),
     BrushTool_Not_Bound_Specified_Player_Specified_Material(
-            "&7There is &cno brush/tool &7currently bound to &d%playerName%&7's &b%material%&7."),
+            getHeader() + "&7There is &cno brush/tool &7currently bound to &d%playerName%&7's &c%material%&7."),
     BrushTool_Info_Below_Self(
-            "\n&7Your currently held &6brush/tool &7info is below:\n"),
+            getHeader() + "&7Your currently held &6brush/tool &7info is &6below&7."),
     BrushTool_Info_Below_Specified_Player(
-            "\n&d%playerName%&7's currently held &6brush/tool &7info is below:\n"),
+            getHeader() + "&d%playerName%&7's currently held &6brush/tool &7info is &6below&7."),
     BrushTool_Info_Below_Specified_Player_Specified_Material(
-            "\n&d%playerName%&7's &b%material% &6brush/tool &7info is below:\n"),
+            getHeader() + "&d%playerName%&7's &b%material% &6brush/tool &7info is &6below&7."),
     BrushTool_Applied(
-            "\n&7Your &6brush/tool &7has been &aapplied&7."),
+            getHeader() + " &7Your &6brush/tool &7has been &aapplied&7."),
     BrushTool_Info_Inquiry_Player_Offline_Requesting_Specify_Material(
-            "&7That player is &coffline&7. Please add an &aitem name/material &7as a third argument."),
-    BrushTool_Macro_Issued_DKInstant(
-            "\n&7Your &6brush/tool &7macro has been &aissued&7, P.S. &aI looove you &c<3&7.\n"),
+            getHeader() + " &7That player is &coffline&7. Please &cspecify a material&7."),
+    BrushTool_Macro_Applied_DKInstant(
+            getHeader() + "&7Your &6brush/tool macro &7has been &aapplied&7, p.s. &aI looove you &c<3&7."),
     Warning_GMask_Is_Enabled(
-            "&8[&cWARNING&8] &7You currently have a &eGMask &7enabled."),
+            getHeader() + "&8[&cWARNING&8] &7You currently have &eGMask &7enabled."),
     Warning_BrushTool_Is_Empty(
-            "&8[&cWARNING&8] &7This &6brush/tool&7's details are &cempty&7."),
+            getHeader() + "&8[&cWARNING&8] &7This &6brush/tool&7's &cdetails &7are &cempty&7."),
     BrushTool_Shared_With_Everyone(
-            "\n&7This &6brush/tool &7has been shared with &aeveryone online&7.\n"),
+            getHeader() + "&7This &6brush/tool &7has been shared with &aeveryone online&7."),
     BrushTool_Shared_From_Specified_Player(
-            "&7This &6brush/tool &7has been shared with you by &d%playerName%&7."),
+            getHeader() + "&7This &6brush/tool &7has been shared with you by &d%playerName%&7."),
     BrushTools_Not_On_File(
-            "&7You have &cno brushes/tools &7saved on file."),
+            getHeader() + "&7You have &cno brushes/tools &7saved on file."),
     Warning_Unable_To_Apply_BrushTools_From_File(
-            "&8[&cWARNING&8] &cUnable to apply brushes/tools from file."),
+            getHeader() + "&8[&cWARNING&8] &cUnable to apply brushes/tools from file."),
     BrushTools_ReApplied(
-            "&7Your prior &6brushes/tools &7have been &are-applied&7, (&eUp to 36&7)."),
+            getHeader() + "&7Your prior &6brushes/tools &7have been &are-applied&7, (&eMax of 36&7)."),
     BrushTools_Cleared(
-            "&7All of your &6brushes/tools &7have been &ccleared &7from the file, & &cunbound&7 in FAWE."),
+            getHeader() + "&7All of your &6brushes/tools &7have been &ccleared &7from the file, & &cunbound&7 in FAWE."),
     BrushTool_Max_Length(
-            "&7The max length for a &6brush/tool &7macro &ename &7is &e48 characters&7."),
+            getHeader() + "&7The max length for a &6brush/tool macro &ename &7is &e48 characters&7."),
     BrushTool_Macro_Saved(
-            "&7Your &6brush/tool &7macro has been &asaved &7as &b%macroName%&7."),
+            getHeader() + "&7Your &6brush/tool macro &7has been &asaved &7as &b%macroName%&7."),
     BrushTool_Macro_Already_Exists_Requesting_Override(
-            "&7Macro &b%macroName% &7already &cexists&7. Add &e-o &7to &eoverride &7it."),
+            getHeader() + "&7Macro &b%macroName% &calready exists&7. Add &e-o &7to &eoverride &7it."),
     BrushTool_Macro_Not_Exist(
-            "&7Macro &b%macroName% &7does &cnot exist&7."),
+            getHeader() + "&7Macro &b%macroName% &7does &cnot exist&7."),
     Warning_BrushTool_Macro_Is_Empty(
-            "&8[&cWARNING&8] &7Macro &b%macroName% &7is &cempty&7."),
+            getHeader() + "&8[&cWARNING&8] &7Macro &b%macroName% &7is &cempty&7."),
     BrushTool_Macro_Applied(
-            "&7Your &6brush/tool &7macro &b%macroName% &7has been &aapplied&7."),
+            getHeader() + "&7Your &6brush/tool macro&7, &b%macroName% &7has been &aapplied&7."),
     BrushTool_Macro_Applied_With_Failures_Missing_Material(
-            "&7Your &6brush/tool &7macro &b%macroName% &7has been &aapplied&7, with &c%integer% failures &7at inventory slot(s) &e%inventorySlots%&7."),
+            getHeader() + "&7Your &6brush/tool macro&7, &b%macroName% &7has been &aapplied&7, with &c%integer% failures &7at inventory slot(s) &e%inventorySlots%&7."),
     BrushTool_Macro_Deleted(
-            "&7The &6brush/tool &7macro &b%macroName% &7has been &cdeleted&7."),
+            getHeader() + "&7The &6brush/tool macro &b%macroName% &7has been &cdeleted&7."),
     BrushTool_Macro_Deletion_Failed(
-            "&7Deletion of macro &b%macroName% &7has &cfailed&7. Please contact an admin."),
+            getHeader() + "&7Deletion of macro &b%macroName% &7has &cfailed&7. Please contact an administrator & or report this issue."),
     BrushTool_Macro_Delete_Requesting_Confirmation(
-            "&7Deletion request for macro &b%macroName% &7received. Add &econfirm &7to the end of your command, within &c15 seconds &7to finalize."),
+            getHeader() + "&7Deletion request for macro &b%macroName% &7received. Add &econfirm &7to the end of your command, within &c15 seconds &7to finalize."),
     BrushTool_Macro_Delete_Requesting_Initial_Request_Before_Confirmation(
-            "&7Deletion request for macro &b%macroName% &cnot &7received. Input &cwithout &econfirm &7first."),
+            getHeader() + "&7Deletion request for macro &b%macroName% &cnot received&7. Input &cwithout &econfirm &7first."),
     BrushTool_Macro_Delete_Confirmation_Window_Expired(
-            "&7Deletion request &econfirmation &7for macro &b%macroName% &7has &cexpired&7. Please try again."),
+            getHeader() + "&7Deletion request &econfirmation &7for macro &b%macroName% &7has &cexpired&7. Please try again."),
     BrushTool_Macro_Help(
-            "&7Please specify an action: &esave&7, &eload&7, or &edelete&7."),
+            getHeader() + "&7Please specify an action: &esave&7, &eload&7, or &edelete&7."),
     Config_Reloaded(
-            "&eThe FAWEBTUtils Config has been reloaded."),
+            getHeader() + "&eThe config has been reloaded."),
     Command_Reserved_For_Players(
-            "&cThis command is reserved for players.");
+            getHeader() + "&cThis command is reserved for players.");
 
     private final String message;
 
@@ -102,6 +102,15 @@ public enum Messages {
      */
     Messages(@NotNull String message) {
         this.message = message;
+    }
+
+    /**
+     * Gets the standardized header for messages.
+     *
+     * @return the standardized header for messages.
+     */
+    private static String getHeader() {
+        return "&8(&3&oBT&8-&2&oUtils&8) ";
     }
 
     /**
@@ -122,13 +131,14 @@ public enum Messages {
      */
     @NotNull
     public static Component recommendedBrushToolMacroGMaskMessage() {
-        return LegacyComponentSerializer.legacyAmpersand().deserialize(
-                        "&7You may want to utilize either option below:\n")
-                .append(LegacyComponentSerializer.legacyAmpersand().deserialize("&e/gmask GrassBlock & GreenConcretePowder &8[&aClick Here&8]\n")
-                        .clickEvent(ClickEvent.runCommand("/gmask grass_block,green_concrete_powder")))
-                .append(LegacyComponentSerializer.legacyAmpersand().deserialize("&2OR\n"))
-                .append(LegacyComponentSerializer.legacyAmpersand().deserialize("&e/gmask GrassBlock &8[&aClick Here&8]"))
-                .clickEvent(ClickEvent.runCommand("/gmask grass_block"));
+        return LegacyComponentSerializer.legacyAmpersand().deserialize("&7You may want to utilize either option below.\n")
+                .append(LegacyComponentSerializer.legacyAmpersand().deserialize("&e/gmask GrassBlock & GreenConcretePowder ")
+                        .append(LegacyComponentSerializer.legacyAmpersand().deserialize("&8[&aClick Here&8]\n")
+                                .clickEvent(ClickEvent.runCommand("/gmask grass_block,green_concrete_powder")))
+                        .append(LegacyComponentSerializer.legacyAmpersand().deserialize("&2OR\n"))
+                        .append(LegacyComponentSerializer.legacyAmpersand().deserialize("&e/gmask GrassBlock ")
+                                .append(LegacyComponentSerializer.legacyAmpersand().deserialize("&8[&aClick Here&8]")
+                                        .clickEvent(ClickEvent.runCommand("/gmask grass_block")))));
     }
 
     /**
@@ -139,9 +149,9 @@ public enum Messages {
     @NotNull
     public static Component getBuggedStateSecondaryBrushInvalidMessage() {
         return LegacyComponentSerializer.legacyAmpersand().deserialize(
-                        "\n&8[&cWARNING&8] \n&7Detected &cbugged brush/tool state&7. Use the link above to &areapply &7your brush.")
+                        getHeader() + "&8[&cWARNING&8] &7Detected &cbugged brush/tool state&7. Use the link above to &areapply &7your brush.")
                 .append(LegacyComponentSerializer.legacyAmpersand().deserialize(
-                                "&7[&eHover for details&7]")
+                                " &7[&eHover for details&7]")
                         .hoverEvent(HoverEvent.showText(LegacyComponentSerializer.legacyAmpersand().deserialize(
                                 """
                                         &eConditions&7: Having a valid brush/tool and running a &e//secondary or equivalent command &7with invalid arguments breaks the brush state.

@@ -428,7 +428,7 @@ public class DKFirstMacro {
                 "//br command 1 undo"
         );
 
-        player.sendMessage(Messages.BrushTool_Macro_Issued_DKInstant.getMessage());
+        player.sendMessage(Messages.BrushTool_Macro_Applied_DKInstant.getMessage());
         player.sendMessage(Messages.recommendedBrushToolMacroGMaskMessage());
         if (DKFirstMacro.hasGlobalMask(player)) player.sendMessage(Messages.Warning_GMask_Is_Enabled.getMessage());
     }
