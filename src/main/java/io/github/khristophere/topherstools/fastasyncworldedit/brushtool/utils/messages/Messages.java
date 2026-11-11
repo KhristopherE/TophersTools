@@ -132,11 +132,11 @@ public enum Messages {
     @NotNull
     public static Component recommendedBrushToolMacroGMaskMessage() {
         return LegacyComponentSerializer.legacyAmpersand().deserialize("&7You may want to utilize either option below.\n")
-                .append(LegacyComponentSerializer.legacyAmpersand().deserialize("&e/gmask GrassBlock & GreenConcretePowder ")
+                .append(LegacyComponentSerializer.legacyAmpersand().deserialize("&e/gmask Grass_Block & Green_Concrete_Powder ")
                         .append(LegacyComponentSerializer.legacyAmpersand().deserialize("&8[&aClick Here&8]\n")
                                 .clickEvent(ClickEvent.runCommand("/gmask grass_block,green_concrete_powder")))
                         .append(LegacyComponentSerializer.legacyAmpersand().deserialize("&2OR\n"))
-                        .append(LegacyComponentSerializer.legacyAmpersand().deserialize("&e/gmask GrassBlock ")
+                        .append(LegacyComponentSerializer.legacyAmpersand().deserialize("&e/gmask Grass_Block ")
                                 .append(LegacyComponentSerializer.legacyAmpersand().deserialize("&8[&aClick Here&8]")
                                         .clickEvent(ClickEvent.runCommand("/gmask grass_block")))));
     }
